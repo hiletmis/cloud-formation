@@ -8,7 +8,6 @@ const Hero = ({ link, bgColor, description, icon }) => {
       <VStack cursor={"pointer"} spacing={0} direction="row" align="left">
         <Box
           p={"1"}
-          borderRadius={"10"}
           alignItems={"center"}
           width={"150px"}
           height={"150px"}
@@ -18,7 +17,8 @@ const Hero = ({ link, bgColor, description, icon }) => {
             bgColor={bgColor}
             width={"100%"}
             height={"100%"}
-            borderRadius={"10"}
+            borderRadius={"sm"}
+            boxShadow="md"
             alignItems={"center"}
           >
             <Image src={icon} width={"60px"} height={"60px"} />
@@ -36,7 +36,8 @@ const Hero = ({ link, bgColor, description, icon }) => {
             bgColor={bgColor}
             width={"100%"}
             height={"100%"}
-            borderRadius={"10"}
+            borderRadius={"sm"}
+            boxShadow="md"
             alignItems={"center"}
           >
             <Text fontSize={"md"} fontWeight={"bold"}>

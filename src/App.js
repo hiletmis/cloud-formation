@@ -38,9 +38,8 @@ function App() {
             <ParticlesBg />
 
             <Routes>
-              <Route path="/" element={<Integrations />} />
-              <Route path="/action" element={<Welcome />} />
-              <Route path="/upload" element={<UploadConfig />} />
+              <Route path="/" element={<Welcome />} />
+              <Route path="/upload" element={<Integrations />} />
               <Route path="/compare" element={<CompareConfig />} />
             </Routes>
           </VStack>

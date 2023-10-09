@@ -9,8 +9,6 @@ const Hero = () => {
     <Flex
       spacing={4}
       height={"90vh"}
-      alignItems={"center"}
-      justifyItems={"center"}
       overflow={"scroll"}
     >
       <VStack
@@ -21,8 +19,8 @@ const Hero = () => {
       >
         <VStack
           p={3}
-          bgColor={COLORS.main}
-          borderRadius={"lg"}
+          bgColor={COLORS.table}
+          borderRadius={"sm"}
           boxShadow="md"
           spacing={4}
           minWidth={"500px"}
@@ -30,18 +28,18 @@ const Hero = () => {
           alignItems={"left"}
           justifyItems={"center"}
         >
-          <Title header={"Select an action to continue"} isLoading={false} />
+          <Title header={"Select an action to continue"} isLoading={false} buttonVisibility={false} />
 
           <Flex justifyContent={"center"} marginBottom={"20px"}>
             <RadioButton
               link={"/upload"}
-              bgColor={COLORS.bg}
+              bgColor={COLORS.info}
               description={"Upload Config"}
               icon={"https://img.icons8.com/ios/452/upload.png"}
             />
             <RadioButton
               link={"/compare"}
-              bgColor={COLORS.bg}
+              bgColor={COLORS.info}
               description={"Compare Config"}
               icon={"https://img.icons8.com/ios/452/compare.png"}
             />

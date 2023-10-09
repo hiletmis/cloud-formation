@@ -9,7 +9,6 @@ import { useState } from "react";
 const Hero = () => {
 
     const [integrations] = useState([]);
-    const [addNew, setAddNew] = useState(false);
     const [configFile, setConfig] = useState(null);
 
     return (
@@ -35,15 +34,11 @@ const Hero = () => {
                     alignItems={"left"}
                     justifyItems={"center"}
                 >
-                    <Title header={"API Integrations"} buttonVisibility={integrations.length !== 0} isLoading={false} onClick={() => setAddNew(integrations.length === 0 ? false : !addNew)} buttonText={addNew ? "Cancel" : "New Integration"} />
-                    {
-                        !addNew ? null :
-                            <UploadConfig configFile={configFile} setConfig={setConfig} />
-                    }
+                    <Title header={"API Integrations"} buttonVisibility={false} isLoading={false} />
 
                     {
                         integrations.length === 0 ?
-                            <UploadConfig configFile={configFile} setConfig={setConfig} />
+                            <UploadConfig configFile={configFile} setConfig={setConfig} description={"To integrate with our API, you'll need to upload a JSON configuration file. This file contains the necessary settings and parameters for the integration. Please ensure your JSON file is correctly formatted and contains all the required information."} />
                             :
                             integrations.map((integration, index) => (
                                 <IntegrationRow key={index} integration={integration} />

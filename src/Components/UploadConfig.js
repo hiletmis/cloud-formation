@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { COLORS } from "../data/colors";
 
-const Hero = ({ configFile, setConfig }) => {
+const Hero = ({ configFile, setConfig, description }) => {
     let fileReader;
 
     const inputFile = useRef(null)
@@ -49,7 +49,8 @@ const Hero = ({ configFile, setConfig }) => {
 
     return (
 
-        <VStack justifyContent={"center"} alignItems={"left"} direction={"column"} >
+        <VStack width={"100%"} justifyContent={"center"} alignItems={"left"} direction={"column"} >
+            <Text fontSize={"sm"}>{description}</Text>
             <Box
                 p={"2"}
                 border={"2px"}

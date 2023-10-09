@@ -37,7 +37,6 @@ const Hero = ({ configData }) => {
 
       return obj;
     });
-    console.log(newState)
     setSecuritySchemeValue(newState)
   }
 
