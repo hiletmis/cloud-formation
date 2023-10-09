@@ -1,9 +1,8 @@
-import { VStack, Flex, Stack, Spacer } from "@chakra-ui/react";
+import { VStack, Flex, Spacer } from "@chakra-ui/react";
 import { COLORS } from "../data/colors";
 import Title from "../Custom/Title";
 import IntegrationRow from "./IntegrationRow";
 import UploadConfig from "./UploadConfig";
-import Display from "./Display";
 import { useState } from "react";
 import ReactJsonViewCompare from 'react-json-view-compare';
 import '../index.css'
