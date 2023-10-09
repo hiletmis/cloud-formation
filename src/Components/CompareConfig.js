@@ -61,7 +61,6 @@ const Hero = () => {
               <VStack bgColor={"red"}>
                 <ReactJsonViewCompare oldData={oldData} newData={newData} />;
               </VStack>
-            //<Display configData={configFile} />
           }
 
         </VStack>

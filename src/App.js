@@ -1,7 +1,6 @@
 import "./App.css";
 import Header from "./Components/Header";
 import Welcome from "./Components/Welcome";
-import UploadConfig from "./Components/UploadConfig";
 import CompareConfig from "./Components/CompareConfig";
 import Integrations from "./Components/Integrations";
 

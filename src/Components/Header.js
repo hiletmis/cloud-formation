@@ -1,5 +1,6 @@
 import { Flex, Heading, Image } from "@chakra-ui/react";
 import { COLORS } from "../data/colors";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -14,7 +15,11 @@ const Header = () => {
           <Image src={`/logo.svg`} width={"25px"} height={"25px"} />
           <Heading size="md">Nodary Push API Review Tool</Heading>
         </Flex>
-        <Flex align="flex-end" gap={"12px"}></Flex>
+        <Flex align="flex-end" gap={"12px"}>
+          <Link to={"/"}>
+            <Image src={`https://img.icons8.com/ios/452/home.png`} width={"25px"} height={"25px"} />
+          </Link>
+        </Flex>
       </Flex>
     </Flex>
   );
