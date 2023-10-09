@@ -1,24 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Header from "./Components/Header";
+import Welcome from "./Components/Welcome";
+import UploadConfig from "./Components/UploadConfig";
+import CompareConfig from "./Components/CompareConfig";
+import Integrations from "./Components/Integrations";
+
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ColorModeScript } from "@chakra-ui/react";
+
+import { ChakraProvider, Flex, VStack } from "@chakra-ui/react";
+import theme from "./theme";
+
+import ParticlesBg from "./Custom/ParticlesBg";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <ChakraProvider theme={theme}>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+
+      <Router>
+        <Header />
+        <Flex
+          h="calc(100vh - 60px)"
+          bgColor={"transparent"}
+          spacing={0}
+          p={2}
+          boxShadow="lg"
+          alignItems={"stretch"}
+          flexDirection={"row"}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <VStack
+            overflow={"scroll"}
+            width={"100%"}
+            alignItems={"left"}
+          >
+            <ParticlesBg />
+
+            <Routes>
+              <Route path="/" element={<Integrations />} />
+              <Route path="/action" element={<Welcome />} />
+              <Route path="/upload" element={<UploadConfig />} />
+              <Route path="/compare" element={<CompareConfig />} />
+            </Routes>
+          </VStack>
+        </Flex>
+      </Router>
+    </ChakraProvider>
   );
 }
 
