@@ -57,7 +57,7 @@ const Hero = ({ configData }) => {
     CloudFormation.Resources.MyAppDefinition.Properties.ContainerDefinitions[0].Environment[0].Value = containerDefinitions
 
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-      JSON.stringify(CloudFormation)
+      JSON.stringify(CloudFormation, null, 2)
     )}`;
 
     const link = document.createElement("a");

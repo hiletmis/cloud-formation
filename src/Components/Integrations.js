@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { VStack, Flex } from "@chakra-ui/react";
 import { COLORS } from "../data/colors";
 import Title from "../Custom/Title";
@@ -9,7 +8,7 @@ import { useState } from "react";
 
 const Hero = () => {
 
-    const [integrations, setIntegrations] = useState([]);
+    const [integrations] = useState([]);
     const [addNew, setAddNew] = useState(false);
     const [configFile, setConfig] = useState(null);
 

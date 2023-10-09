@@ -1,5 +1,5 @@
 import React from "react";
-import { VStack, Heading, Flex, Spacer, Text, Box } from "@chakra-ui/react";
+import { VStack, Flex } from "@chakra-ui/react";
 import { COLORS } from "../data/colors";
 import Title from "../Custom/Title";
 import RadioButton from "../Custom/RadioButton";

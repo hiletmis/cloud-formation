@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { Flex, VStack } from "@chakra-ui/react";
-import { Box, Text, Image } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { VStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { COLORS } from "../data/colors";
 
 const Hero = () => {
