@@ -18,7 +18,7 @@ const Hero = ({ configData }) => {
     const config = configData === null ? null : JSON.parse(configData)
 
     if (config == null) return
-    if (config.ois === null) return
+    if (config.ois === undefined) return
     if (config.ois.length === 0) return
 
     if (config.airnodeWalletMnemonic === null) return
@@ -73,40 +73,43 @@ const Hero = ({ configData }) => {
         {
           ois.map((ois, index) => (
             <VStack key={index} alignItems={"left"} width={"100%"}>
-              <Title header={"Airnode Wallet Mnemonic"} isLoading={false} buttonVisibility={false} />
-              <VStack alignItems={"left"} p={2} border={"1px"} borderColor={COLORS.main} width={"100%"}>
-                <InputRow text={AIRNODE_WALLET_MNEMONIC} title={"Enter wallet mnemonic:"} setText={setAirnodeWalletMnemonic} />
-              </VStack>
+
               <Title header={ois.title} buttonVisibility={false} isLoading={false} />
               <VStack bgColor={COLORS.table} border={"1px"} borderColor={COLORS.main} p={4} spacing={4} alignItems={"left"}>
-                <Flex>
-                  <Heading size={"md"}>Secrets</Heading>
-                </Flex>
-                <VStack alignItems={"left"} p={2} border={"1px"} borderColor={COLORS.main} width={"100%"}>
 
-                  <VStack width={"100%"} direction="row" align="left">
-                    <Text fontWeight={"bold"} fontSize={"md"}>{"Security Scheme Value"}</Text>
-                    <Box p="2" width={"100%"} borderRadius={"10"} bgColor={COLORS.table} alignItems={"center"}>
-                      <Flex className='box'>
-                        <Input type="text"
-                          value={SECURITY_SCHEME_VALUES[index].securitySchemeValue}
-                          onChange={(e) => setSecuritySchemeValues(index, e.target.value)}
-                          size='md' />
-                        <Spacer />
-                      </Flex>
-                    </Box>
-                  </VStack>
-                </VStack>
                 <Flex>
-                  <Heading size={"md"}>Endpoints</Heading>
+                  <Heading size={"md"}>Feeds</Heading>
                 </Flex>
                 {
                   ois.endpoints.map((endpoint, index) => (
                     <VStack key={index} alignItems={"left"} width={"100%"}>
-                      <Endpoint endpoint={endpoint} />
+                      <Endpoint endpoint={endpoint} servers={ois.apiSpecifications.servers} />
                     </VStack>
                   ))
                 }
+              </VStack>
+
+              <Flex>
+                <Heading size={"md"}>Secrets</Heading>
+              </Flex>
+              <VStack alignItems={"left"} p={2} border={"1px"} borderColor={COLORS.main} width={"100%"}>
+
+                <VStack width={"100%"} direction="row" align="left">
+                  <Text fontWeight={"bold"} fontSize={"md"}>{"Security Scheme Value"}</Text>
+                  <Box p="2" width={"100%"} borderRadius={"10"} bgColor={COLORS.table} alignItems={"center"}>
+                    <Flex className='box'>
+                      <Input type="text"
+                        value={SECURITY_SCHEME_VALUES[index].securitySchemeValue}
+                        onChange={(e) => setSecuritySchemeValues(index, e.target.value)}
+                        size='md' />
+                      <Spacer />
+                    </Flex>
+                  </Box>
+                </VStack>
+              </VStack>
+              <Title header={"Airnode Wallet Mnemonic"} isLoading={false} buttonVisibility={false} />
+              <VStack alignItems={"left"} p={2} border={"1px"} borderColor={COLORS.main} width={"100%"}>
+                <InputRow text={AIRNODE_WALLET_MNEMONIC} title={"Enter wallet mnemonic:"} setText={setAirnodeWalletMnemonic} />
               </VStack>
             </VStack>
           ))

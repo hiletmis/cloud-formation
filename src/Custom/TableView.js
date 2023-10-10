@@ -3,7 +3,7 @@ import { COLORS } from "../data/colors";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 
-const Hero = ({ view, header, defaultState = false }) => {
+const TableView = ({ view, header, defaultState = false }) => {
 
     const [isOpen, setIsOpen] = useState(defaultState);
 
@@ -26,4 +26,4 @@ const Hero = ({ view, header, defaultState = false }) => {
     );
 };
 
-export default Hero;
+export default TableView;

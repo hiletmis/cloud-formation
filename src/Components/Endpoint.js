@@ -1,86 +1,67 @@
 import React from "react";
-import { VStack, Flex, Spacer, Text, Box } from "@chakra-ui/react";
-import { COLORS } from "../data/colors";
-import { CopyBlock, dracula } from "react-code-blocks";
+import { VStack } from "@chakra-ui/react";
+import FeedRowView from "../Custom/FeedRowView";
+
+import parserTypeScript from "prettier/parser-babel";
+import prettier from "prettier/standalone";
 import ExpandableView from "../Custom/ExpandableView";
 
-const Hero = ({ endpoint }) => {
-    const formatCode = (code) => {
-        let tmp = code.replaceAll(" = {", " = {\n\t\t\t")
-        tmp = tmp.replaceAll("\\n", "")
+const Hero = ({ endpoint, servers }) => {
 
-        tmp = tmp.replaceAll("};", "\n\t\t};")
-        tmp = tmp.replaceAll("\":{", "\":\t{")
-        tmp = tmp.replaceAll("\"(_input) => {\\n              return _input.price\\n            }\\n            \"", "\t(_input) => {return _input.price}")
-        tmp = tmp.replaceAll("            ", "")
-        return tmp.replaceAll(",\"", ",\n\t\t\t\"")
+    const prettify = (object) => {
+        try {
+            const newObject = object.map((code, index) => {
+                const filtered = code.value.replaceAll(/(\\n)|( )|(\\")/g, "")
+                const pret = prettier.format(filtered, {
+                    parser: "babel",
+                    plugins: [parserTypeScript],
+                });
+                return pret
+            })
+
+            if (newObject == null) return []
+            const split = newObject[0].split("\n")
+
+            const feedArray = split.map((item) => {
+                return (item.replaceAll(/(")|( )|(,)/g, "").split(":"))
+            })
+
+            let final = []
+            for (let i = 0; i < feedArray.length; i++) {
+                if (feedArray[i].length === 0) continue
+                if (!new RegExp(/[A-Z0-9]+\/[A-Z0-9]+/, "g").test(feedArray[i][0])) continue
+                final.push(feedArray[i])
+            }
+            return final
+        } catch (error) {
+            return []
+        }
+    }
+
+    const combine = () => {
+        const postProcessingSpecifications = prettify(endpoint.postProcessingSpecifications)
+        const preProcessingSpecifications = prettify(endpoint.preProcessingSpecifications)
+
+        const combined = postProcessingSpecifications.map((item, index) => {
+            return {
+                feed: item[0],
+                code: item[1],
+                preProcessingSpecifications: preProcessingSpecifications[index][1].replaceAll("{", ""),
+                preProcessingSpecificationsValue: preProcessingSpecifications[index][2].replaceAll("}", ""),
+            }
+        })
+        return combined
     }
 
     return (
         <VStack alignItems={"left"}>
-            <Flex alignItems={"center"} p={2} bgColor={COLORS.main} width={"100%"}>
-                <Text fontWeight={"bold"} fontSize={"xl"}>{endpoint.name}</Text>
-                <Spacer />
-                <Box p={2} alignItems={"center"} borderRadius={"sm"} bgColor={endpoint.operation.method === "get" ? "blue.300" : "green.300"}>
-                    <Text fontWeight={"bold"} fontSize={"md"}>{String(endpoint.operation.method).toUpperCase()}</Text>
-                </Box>
-            </Flex>
-            <ExpandableView
-                view={
-                    <VStack>
-                        <Flex alignItems={"center"} p={1} bgColor={COLORS.info2} width={"100%"}>
-                            <Text fontWeight={"bold"} fontSize={"md"}>{"Parameter name"}</Text>
-                            <Spacer />
-                            <Text fontWeight={"bold"} fontSize={"md"}>{"Required"}</Text>
-                        </Flex>
-                        {
-                            endpoint.parameters.map((parameter, index) => (
-                                <Flex key={index} alignItems={"center"} p={1} bgColor={COLORS.app} width={"100%"}>
-                                    <Text fontWeight={"bold"} fontSize={"md"}>{parameter.name}</Text>
-                                    <Spacer />
-                                    <Text fontSize={"md"}>{parameter.required ? "true" : "false"}</Text>
-                                </Flex>
-                            ))
-                        }
+            {
+                combine().map((feed, index) => (
+                    <VStack key={index} alignItems={"left"} width={"100%"}>
+                        <ExpandableView view={<FeedRowView feed={feed} servers={servers} />} header={feed.feed} />
                     </VStack>
-                }
-                header={"Parameters"}
-                defaultState={true}
-            />
-            <ExpandableView
-                view={
-                    endpoint.preProcessingSpecifications.map((code, index) => (
-                        <VStack key={index} alignItems={"left"} width={"100%"}>
-                            <CopyBlock
-                                text={formatCode(code.value)}
-                                language={"javascript"}
-                                showLineNumbers={true}
-                                theme={dracula}
-                                codeBlock={false}
-                            />
-                        </VStack>
-                    ))
-                }
-                header={"Pre Processing Specifications"}
-            />
-            <ExpandableView
-                view={
-                    endpoint.postProcessingSpecifications.map((code, index) => (
-                        <VStack key={index} alignItems={"left"} width={"100%"}>
-                            <CopyBlock
-                                text={formatCode(code.value)}
-                                language={"javascript"}
-                                showLineNumbers={true}
-                                theme={dracula}
-                                codeBlock={false}
-                            />
-                        </VStack>
-
-                    ))
-                }
-                header={"Post Processing Specifications"}
-            />
-
+                ))
+            }
         </VStack>
     );
 };
