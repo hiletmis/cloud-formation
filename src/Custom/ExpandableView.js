@@ -3,13 +3,27 @@ import { COLORS } from "../data/colors";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 
-const ExpandableView = ({ view, header, defaultState = false }) => {
+const ExpandableView = ({ view, header, defaultState = false, status = 0 }) => {
 
     const [isOpen, setIsOpen] = useState(defaultState);
 
+    const getColor = () => {
+        switch (status) {
+            case 0:
+                return COLORS.info
+            case 1:
+                return "green.300"
+            case 2:
+                return "red.300"
+            default:
+                return "gray.300"
+        }
+    }
+
+
     return (
         <VStack alignItems={"left"} p={2} border={"1px"} borderColor={COLORS.main} width={"100%"}>
-            <Box p={2} alignItems={"center"} borderRadius={"sm"} bgColor={COLORS.info}>
+            <Box p={2} alignItems={"center"} borderRadius={"sm"} bgColor={getColor()}>
                 <Flex alignItems={"center"}>
                     <Text fontWeight={"bold"} fontSize={"lg"}>{header}</Text>
                     <Spacer />

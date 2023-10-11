@@ -3,18 +3,43 @@ import { COLORS } from "../data/colors";
 import Title from "../Custom/Title";
 import IntegrationRow from "./IntegrationRow";
 import UploadConfig from "./UploadConfig";
-import { useState } from "react";
-import ReactJsonViewCompare from 'react-json-view-compare';
-import '../index.css'
+import { useState, useEffect } from "react";
+import CompareEndpoints from "./CompareEndpoints";
+
 
 const Hero = () => {
 
   const [integrations] = useState([]);
   const [configFile, setConfig] = useState(null);
   const [configFile2, setConfig2] = useState(null);
+  const [oldOis, setOldOis] = useState([])
+  const [newOis, setNewOis] = useState([])
 
-  const oldData = configFile === null ? null : JSON.parse(configFile)
-  const newData = configFile2 === null ? null : JSON.parse(configFile2)
+  useEffect(() => {
+    setOldOis([])
+    if (configFile === null) return
+
+    const oldData = configFile === null ? null : JSON.parse(configFile)
+
+    if (oldData == null) return
+    if (oldData.ois === undefined) return
+    if (oldData.ois.length === 0) return
+
+    setOldOis(oldData.ois)
+  }, [configFile])
+
+  useEffect(() => {
+    setNewOis([])
+    if (configFile2 === null) return
+
+    const newData = configFile2 === null ? null : JSON.parse(configFile2)
+
+    if (newData == null) return
+    if (newData.ois === undefined) return
+    if (newData.ois.length === 0) return
+
+    setNewOis(newData.ois)
+  }, [configFile2])
 
   return (
     <Flex
@@ -41,7 +66,6 @@ const Hero = () => {
         >
           <Title header={"Compare API Configuration"} buttonVisibility={false} isLoading={false} />
 
-
           {
             integrations.length === 0 ?
               <Flex p={5} justifyContent={"space-around"}>
@@ -56,12 +80,12 @@ const Hero = () => {
               ))
           }
 
-          {
-            configFile === null ? null :
-              <VStack bgColor={"red"}>
-                <ReactJsonViewCompare oldData={oldData} newData={newData} />;
-              </VStack>
-          }
+          <VStack alignItems={"left"}>
+            <VStack alignItems={"left"} width={"100%"}>
+              <CompareEndpoints oldOis={oldOis} newOis={newOis} />
+            </VStack>
+          </VStack>
+
 
         </VStack>
       </VStack>
