@@ -36,7 +36,7 @@ const Hero = ({ endpoint, servers }) => {
 
     const combine = () => {
         const postProcessingSpecifications = cut(endpoint.postProcessingSpecifications, /{.+}/g, /[A-Z0-9]+\/[A-Z]+:(?:\(+)(.+?)(?:\)+) => (?:\{+)(.+?)(?:\}+)/g)
-        const preProcessingSpecifications = cut(endpoint.preProcessingSpecifications, /{.+"}}/g, /["A-Z0-9]+\/[A-Z"]+:(?:\{+)(.+?)(?:\}+)/g, false)
+        const preProcessingSpecifications = cut(endpoint.preProcessingSpecifications, /{.+"}}}/g, /["A-Z0-9]+\/[A-Z"]+:(?:\{+)(.+?)(?:\}+)/g, false)
 
         const combined = postProcessingSpecifications.map((item, index) => {
             return {

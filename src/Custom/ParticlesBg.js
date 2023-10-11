@@ -26,16 +26,16 @@ const ParticlesBg = () => {
               value: COLORS.app,
             },
           },
-          fpsLimit: 60,
+          fpsLimit: 120,
           particles: {
             color: {
-              value: COLORS.button,
+              value: COLORS.bg,
             },
             links: {
-              color: COLORS.button,
+              color: COLORS.bg,
               distance: 150,
               enable: true,
-              opacity: 0.2,
+              opacity: 0.3,
               width: 1,
             },
             move: {
@@ -51,15 +51,15 @@ const ParticlesBg = () => {
             number: {
               density: {
                 enable: true,
-                area: 1000,
+                area: 800,
               },
-              value: 50,
+              value: 80,
             },
             opacity: {
-              value: 0.2,
+              value: 0.3,
             },
             shape: {
-              type: "circle",
+              type: "square",
             },
             size: {
               value: { min: 1, max: 5 },
