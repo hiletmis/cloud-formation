@@ -10,31 +10,51 @@ const FeedRowView = ({ feed, servers }) => {
     const [response, setResponse] = useState(null)
 
     const formatCode = (code) => {
-        return prettier.format(code, {
-            parser: "babel",
-            plugins: [parserTypeScript],
-        });
+        try {
+            return prettier.format(code, {
+                semi: false,
+                parser: "babel",
+                plugins: [parserTypeScript],
+            });
+        } catch (error) {
+            return code
+        }
     }
 
     const getPath = () => {
-        const path = feed.preProcessingSpecificationsValue
-        if (servers.length === 0) return path
+        try {
 
-        const server = servers[0]
-        const url = server.url
-        const basePath = server.basePath
-        const pathWithBase = basePath + path
-        return url + pathWithBase
+            const path = JSON.parse(feed.preProcessingSpecificationsValue)
+            if (servers.length === 0) return path
+            const server = servers[0]
+            const url = server.url
+
+            let queryString = "?"
+            Object.keys(path.parameters).forEach((key) => {
+                const value = path.parameters[key]
+                queryString += `${key}=${value}&`
+            })
+
+            queryString = queryString.substring(0, queryString.length - 1)
+
+            const pathWithBase = url + "/" + path.path + queryString
+            return pathWithBase
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const getPrice = () => {
         const url = getPath()
 
-        fetch(url).then((res) => {
-            setResponse(res)
-        }).catch((error) => {
-            setResponse(error)
-        })
+        fetch(url)
+            .then((response) => response.json())
+            .then((res) => {
+                setResponse(JSON.stringify(res, null, 2))
+            }).catch((error) => {
+                setResponse(error)
+            })
     }
 
     return (
@@ -52,7 +72,7 @@ const FeedRowView = ({ feed, servers }) => {
                     <VStack alignItems={"left"} width={"100%"}>
                         <Text fontSize={"md"} fontWeight={"bold"}>Response</Text>
                         <CopyBlock
-                            text={response}
+                            text={formatCode(response)}
                             language={"javascript"}
                             showLineNumbers={true}
                             theme={dracula}

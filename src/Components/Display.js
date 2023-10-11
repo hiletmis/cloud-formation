@@ -81,7 +81,7 @@ const Hero = ({ configData }) => {
                   <Heading size={"md"}>Feeds</Heading>
                 </Flex>
                 {
-                  ois.endpoints.map((endpoint, index) => (
+                  ois.endpoints.filter((endpoint) => endpoint.name === "feed").map((endpoint, index) => (
                     <VStack key={index} alignItems={"left"} width={"100%"}>
                       <Endpoint endpoint={endpoint} servers={ois.apiSpecifications.servers} />
                     </VStack>

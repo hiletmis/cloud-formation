@@ -2,52 +2,47 @@ import React from "react";
 import { VStack } from "@chakra-ui/react";
 import FeedRowView from "../Custom/FeedRowView";
 
-import parserTypeScript from "prettier/parser-babel";
-import prettier from "prettier/standalone";
 import ExpandableView from "../Custom/ExpandableView";
 
 const Hero = ({ endpoint, servers }) => {
 
-    const prettify = (object) => {
+    const cut = (object, initialMatch, finalMatch, replaceQuotes = true) => {
         try {
             const newObject = object.map((code, index) => {
-                const filtered = code.value.replaceAll(/(\\n)|( )|(\\")/g, "")
-                const pret = prettier.format(filtered, {
-                    parser: "babel",
-                    plugins: [parserTypeScript],
-                });
-                return pret
+                const object = code.value.match(initialMatch)
+
+                let filtered = replaceQuotes ? object[0].replaceAll(/(\\n)|(\\)|(")/g, "") : object[0].replaceAll(/(\\n)/g, "")
+                filtered = filtered.replace(/ +(?= )/g, '');
+                return filtered.substring(1, object[0].length - 1);
             })
 
-            if (newObject == null) return []
-            const split = newObject[0].split("\n")
-
-            const feedArray = split.map((item) => {
-                return (item.replaceAll(/(")|( )|(,)/g, "").split(":"))
-            })
+            if (newObject == null || newObject === undefined) return []
+            const splitParanthesis = newObject[0].match(finalMatch)
 
             let final = []
-            for (let i = 0; i < feedArray.length; i++) {
-                if (feedArray[i].length === 0) continue
-                if (!new RegExp(/[A-Z0-9]+\/[A-Z0-9]+/, "g").test(feedArray[i][0])) continue
-                final.push(feedArray[i])
+
+            for (let i = 0; i < splitParanthesis.length; i++) {
+                const split = splitParanthesis[i].split(/:(.*)/s)
+                final.push(split)
             }
+
             return final
         } catch (error) {
-            return []
+            console.log(error)
         }
+
+        return []
     }
 
     const combine = () => {
-        const postProcessingSpecifications = prettify(endpoint.postProcessingSpecifications)
-        const preProcessingSpecifications = prettify(endpoint.preProcessingSpecifications)
+        const postProcessingSpecifications = cut(endpoint.postProcessingSpecifications, /{.+}/g, /[A-Z0-9]+\/[A-Z]+:(?:\(+)(.+?)(?:\)+) => (?:\{+)(.+?)(?:\}+)/g)
+        const preProcessingSpecifications = cut(endpoint.preProcessingSpecifications, /{.+"}}/g, /["A-Z0-9]+\/[A-Z"]+:(?:\{+)(.+?)(?:\}+)/g, false)
 
         const combined = postProcessingSpecifications.map((item, index) => {
             return {
                 feed: item[0],
                 code: item[1],
-                preProcessingSpecifications: preProcessingSpecifications[index][1].replaceAll("{", ""),
-                preProcessingSpecificationsValue: preProcessingSpecifications[index][2].replaceAll("}", ""),
+                preProcessingSpecificationsValue: preProcessingSpecifications[index][1],
             }
         })
         return combined
