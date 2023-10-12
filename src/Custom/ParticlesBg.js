@@ -11,8 +11,7 @@ const ParticlesBg = () => {
     await loadSlim(engine);
   }, []);
 
-  const particlesLoaded = useCallback(async (container) => {
-  }, []);
+  const particlesLoaded = useCallback(async (container) => {}, []);
 
   return (
     <VStack zIndex={-1}>

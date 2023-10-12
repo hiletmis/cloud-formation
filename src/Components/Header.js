@@ -17,7 +17,11 @@ const Header = () => {
         </Flex>
         <Flex align="flex-end" gap={"12px"}>
           <Link to={"/"}>
-            <Image src={`https://img.icons8.com/ios/452/home.png`} width={"25px"} height={"25px"} />
+            <Image
+              src={`https://img.icons8.com/ios/452/home.png`}
+              width={"25px"}
+              height={"25px"}
+            />
           </Link>
         </Flex>
       </Flex>

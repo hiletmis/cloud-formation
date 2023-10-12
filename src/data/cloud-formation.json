@@ -1,164 +1,156 @@
 {
-    "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "A CloudFormation template for deploying  my_app.",
-    "Resources": {
-        "CloudWatchLogsGroup": {
-            "Description": "The service log the outputs of the app.",
-            "Type": "AWS::Logs::LogGroup",
-            "Properties": {
-                "LogGroupName": "myAppLogs",
-                "RetentionInDays": 7
-            }
-        },
-        "MyAppDefinition": {
-            "Type": "AWS::ECS::TaskDefinition",
-            "Description": "App's definiton",
-            "Properties": {
-                "NetworkMode": "awsvpc",
-                "Cpu": 256,
-                "Memory": 512,
-                "ExecutionRoleArn": {
-                    "Ref": "ECSTaskRole"
-                },
-                "RequiresCompatibilities": [
-                    "FARGATE"
-                ],
-                "ContainerDefinitions": [
-                    {
-                        "Name": "my_app",
-                        "Image": "metobom1/my_app",
-                        "Environment": [
-                            {
-                                "Name": "CONFIG",
-                                "Value": ""
-                            }
-                        ],
-                        "PortMappings": [
-                            {
-                                "ContainerPort": 8080
-                            }
-                        ],
-                        "LogConfiguration": {
-                            "LogDriver": "awslogs",
-                            "Options": {
-                                "awslogs-group": {
-                                    "Ref": "CloudWatchLogsGroup"
-                                },
-                                "awslogs-region": {
-                                    "Ref": "AWS::Region"
-                                },
-                                "awslogs-stream-prefix": "my_app"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        "MyAppCluster": {
-            "Type": "AWS::ECS::Cluster",
-            "Description": "ECS Cluster to run services.",
-            "Properties": {
-                "ClusterName": "my_app_cluster"
-            }
-        },
-        "MyAppService": {
-            "Type": "AWS::ECS::Service",
-            "Description": "Service to run the defined app.",
-            "Properties": {
-                "Cluster": {
-                    "Ref": "MyAppCluster"
-                },
-                "ServiceName": "my_app_service",
-                "DesiredCount": 1,
-                "LaunchType": "FARGATE",
-                "TaskDefinition": {
-                    "Ref": "MyAppDefinition"
-                },
-                "NetworkConfiguration": {
-                    "AwsvpcConfiguration": {
-                        "AssignPublicIp": "ENABLED",
-                        "Subnets": [
-                            "subnet-0d8dc1c4d8677b97c",
-                            "subnet-0440d6c2e00af4944",
-                            "subnet-059f430393c7b9b9f",
-                            "subnet-04c99243cc1e19262",
-                            "subnet-024ce29d1f319c1d6",
-                            "subnet-0468245acfa795e39"
-                        ],
-                        "SecurityGroups": [
-                            "sg-0e0d2b972d0836114"
-                        ]
-                    }
-                },
-                "DeploymentConfiguration": {
-                    "MinimumHealthyPercent": 100,
-                    "MaximumPercent": 200
-                }
-            }
-        },
-        "ECSTaskRole": {
-            "Type": "AWS::IAM::Role",
-            "Description": "Role for running ECS tasks and creating logs.",
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Statement": {
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": [
-                                "ecs-tasks.amazonaws.com"
-                            ]
-                        },
-                        "Action": [
-                            "sts:AssumeRole"
-                        ]
-                    }
-                },
-                "Policies": [
-                    {
-                        "PolicyName": "MyAppAmazonECSTaskExecutionRolePolicy",
-                        "PolicyDocument": {
-                            "Statement": {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "logs:CreateLogGroup",
-                                    "logs:CreateLogStream",
-                                    "logs:DescribeLogStreams",
-                                    "logs:PutLogEvents"
-                                ],
-                                "Resource": "*"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        "WaitConditionHandle": {
-            "Type": "AWS::CloudFormation::WaitConditionHandle",
-            "Properties": {}
-        },
-        "FailDueToWrongRegion": {
-            "Type": "AWS::CloudFormation::WaitCondition",
-            "Condition": "NotInUsEast1",
-            "Properties": {
-                "Handle": {
-                    "Ref": "WaitConditionHandle"
-                },
-                "Timeout": "1"
-            }
-        }
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "A CloudFormation template for deploying  my_app.",
+  "Resources": {
+    "CloudWatchLogsGroup": {
+      "Description": "The service log the outputs of the app.",
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "myAppLogs",
+        "RetentionInDays": 7
+      }
     },
-    "Conditions": {
-        "NotInUsEast1": {
-            "Fn::Not": [
-                {
-                    "Fn::Equals": [
-                        {
-                            "Ref": "AWS::Region"
-                        },
-                        "us-east-1"
-                    ]
-                }
-            ]
+    "MyAppDefinition": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Description": "App's definiton",
+      "Properties": {
+        "NetworkMode": "awsvpc",
+        "Cpu": 256,
+        "Memory": 512,
+        "ExecutionRoleArn": {
+          "Ref": "ECSTaskRole"
+        },
+        "RequiresCompatibilities": ["FARGATE"],
+        "ContainerDefinitions": [
+          {
+            "Name": "my_app",
+            "Image": "metobom1/my_app",
+            "Environment": [
+              {
+                "Name": "CONFIG",
+                "Value": ""
+              }
+            ],
+            "PortMappings": [
+              {
+                "ContainerPort": 8080
+              }
+            ],
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": {
+                  "Ref": "CloudWatchLogsGroup"
+                },
+                "awslogs-region": {
+                  "Ref": "AWS::Region"
+                },
+                "awslogs-stream-prefix": "my_app"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "MyAppCluster": {
+      "Type": "AWS::ECS::Cluster",
+      "Description": "ECS Cluster to run services.",
+      "Properties": {
+        "ClusterName": "my_app_cluster"
+      }
+    },
+    "MyAppService": {
+      "Type": "AWS::ECS::Service",
+      "Description": "Service to run the defined app.",
+      "Properties": {
+        "Cluster": {
+          "Ref": "MyAppCluster"
+        },
+        "ServiceName": "my_app_service",
+        "DesiredCount": 1,
+        "LaunchType": "FARGATE",
+        "TaskDefinition": {
+          "Ref": "MyAppDefinition"
+        },
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "ENABLED",
+            "Subnets": [
+              "subnet-0d8dc1c4d8677b97c",
+              "subnet-0440d6c2e00af4944",
+              "subnet-059f430393c7b9b9f",
+              "subnet-04c99243cc1e19262",
+              "subnet-024ce29d1f319c1d6",
+              "subnet-0468245acfa795e39"
+            ],
+            "SecurityGroups": ["sg-0e0d2b972d0836114"]
+          }
+        },
+        "DeploymentConfiguration": {
+          "MinimumHealthyPercent": 100,
+          "MaximumPercent": 200
         }
+      }
+    },
+    "ECSTaskRole": {
+      "Type": "AWS::IAM::Role",
+      "Description": "Role for running ECS tasks and creating logs.",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": ["ecs-tasks.amazonaws.com"]
+            },
+            "Action": ["sts:AssumeRole"]
+          }
+        },
+        "Policies": [
+          {
+            "PolicyName": "MyAppAmazonECSTaskExecutionRolePolicy",
+            "PolicyDocument": {
+              "Statement": {
+                "Effect": "Allow",
+                "Action": [
+                  "logs:CreateLogGroup",
+                  "logs:CreateLogStream",
+                  "logs:DescribeLogStreams",
+                  "logs:PutLogEvents"
+                ],
+                "Resource": "*"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "WaitConditionHandle": {
+      "Type": "AWS::CloudFormation::WaitConditionHandle",
+      "Properties": {}
+    },
+    "FailDueToWrongRegion": {
+      "Type": "AWS::CloudFormation::WaitCondition",
+      "Condition": "NotInUsEast1",
+      "Properties": {
+        "Handle": {
+          "Ref": "WaitConditionHandle"
+        },
+        "Timeout": "1"
+      }
     }
+  },
+  "Conditions": {
+    "NotInUsEast1": {
+      "Fn::Not": [
+        {
+          "Fn::Equals": [
+            {
+              "Ref": "AWS::Region"
+            },
+            "us-east-1"
+          ]
+        }
+      ]
+    }
+  }
 }

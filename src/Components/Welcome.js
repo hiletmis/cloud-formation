@@ -6,11 +6,7 @@ import RadioButton from "../Custom/RadioButton";
 
 const Hero = () => {
   return (
-    <Flex
-      spacing={4}
-      height={"90vh"}
-      overflow={"scroll"}
-    >
+    <Flex spacing={4} height={"90vh"} overflow={"scroll"}>
       <VStack
         spacing={4}
         width={"100%"}
@@ -28,7 +24,11 @@ const Hero = () => {
           alignItems={"left"}
           justifyItems={"center"}
         >
-          <Title header={"Select an action to continue"} isLoading={false} buttonVisibility={false} />
+          <Title
+            header={"Select an action to continue"}
+            isLoading={false}
+            buttonVisibility={false}
+          />
 
           <Flex justifyContent={"center"} marginBottom={"20px"}>
             <RadioButton

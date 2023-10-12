@@ -3,13 +3,15 @@ import { Heading, Flex, Spacer, VStack, Button } from "@chakra-ui/react";
 import { ColorRing } from "react-loader-spinner";
 import { COLORS } from "../data/colors";
 
-const Hero = ({ isLoading, header, onClick, buttonText, buttonVisibility = true }) => {
+const Hero = ({
+  isLoading,
+  header,
+  onClick,
+  buttonText,
+  buttonVisibility = true,
+}) => {
   return (
-    <VStack
-      p={3}
-      alignItems={"left"}
-      bgColor={COLORS.main}
-    >
+    <VStack p={3} alignItems={"left"} bgColor={COLORS.main}>
       <Flex>
         <Heading size={"lg"}>{header}</Heading>
         <Spacer />
@@ -21,10 +23,11 @@ const Hero = ({ isLoading, header, onClick, buttonText, buttonVisibility = true 
           ariaLabel="loading"
           visible={isLoading}
         />
-        {
-          !buttonVisibility ? null :
-            <Button colorScheme="orange" size="sm" onClick={onClick}>{buttonText}</Button>
-        }
+        {!buttonVisibility ? null : (
+          <Button colorScheme="orange" size="sm" onClick={onClick}>
+            {buttonText}
+          </Button>
+        )}
       </Flex>
     </VStack>
   );

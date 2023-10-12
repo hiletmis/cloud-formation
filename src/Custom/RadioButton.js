@@ -6,12 +6,7 @@ const Hero = ({ link, bgColor, description, icon }) => {
   return (
     <Link to={link}>
       <VStack cursor={"pointer"} spacing={0} direction="row" align="left">
-        <Box
-          p={"1"}
-          alignItems={"center"}
-          width={"150px"}
-          height={"150px"}
-        >
+        <Box p={"1"} alignItems={"center"} width={"150px"} height={"150px"}>
           <Flex
             justify={"center"}
             bgColor={bgColor}

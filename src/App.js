@@ -4,7 +4,6 @@ import Welcome from "./Components/Welcome";
 import CompareConfig from "./Components/CompareConfig";
 import Integrations from "./Components/Integrations";
 
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ColorModeScript } from "@chakra-ui/react";
 
@@ -29,11 +28,7 @@ function App() {
           alignItems={"stretch"}
           flexDirection={"row"}
         >
-          <VStack
-            overflow={"scroll"}
-            width={"100%"}
-            alignItems={"left"}
-          >
+          <VStack overflow={"scroll"} width={"100%"} alignItems={"left"}>
             <ParticlesBg />
 
             <Routes>

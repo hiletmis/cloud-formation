@@ -1,536 +1,475 @@
 {
-    "$schema": "http://json-schema.org/draft-06/schema#",
-    "$ref": "#/definitions/ConfigJSON",
-    "definitions": {
-        "ConfigJSON": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "apiCredentials": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/APICredential"
-                    }
-                },
-                "chains": {
-                    "type": "array",
-                    "items": {}
-                },
-                "nodeSettings": {
-                    "$ref": "#/definitions/NodeSettings"
-                },
-                "ois": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Ois"
-                    }
-                },
-                "templates": {
-                    "type": "array",
-                    "items": {}
-                },
-                "triggers": {
-                    "$ref": "#/definitions/Triggers"
-                }
-            },
-            "required": [
-                "apiCredentials",
-                "chains",
-                "nodeSettings",
-                "ois",
-                "templates",
-                "triggers"
-            ],
-            "title": "ConfigJSON"
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/ConfigJSON",
+  "definitions": {
+    "ConfigJSON": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "apiCredentials": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/APICredential"
+          }
         },
-        "APICredential": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "oisTitle": {
-                    "type": "string"
-                },
-                "securitySchemeName": {
-                    "type": "string"
-                },
-                "securitySchemeValue": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "oisTitle",
-                "securitySchemeName",
-                "securitySchemeValue"
-            ],
-            "title": "APICredential"
+        "chains": {
+          "type": "array",
+          "items": {}
         },
-        "NodeSettings": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "airnodeWalletMnemonic": {
-                    "type": "string"
-                },
-                "cloudProvider": {
-                    "$ref": "#/definitions/CloudProvider"
-                },
-                "heartbeat": {
-                    "$ref": "#/definitions/Heartbeat"
-                },
-                "httpGateway": {
-                    "$ref": "#/definitions/Gateway"
-                },
-                "httpSignedDataGateway": {
-                    "$ref": "#/definitions/Gateway"
-                },
-                "logFormat": {
-                    "type": "string"
-                },
-                "logLevel": {
-                    "type": "string"
-                },
-                "nodeVersion": {
-                    "type": "string"
-                },
-                "oevGateway": {
-                    "$ref": "#/definitions/Gateway"
-                },
-                "stage": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "airnodeWalletMnemonic",
-                "cloudProvider",
-                "heartbeat",
-                "httpGateway",
-                "httpSignedDataGateway",
-                "logFormat",
-                "logLevel",
-                "nodeVersion",
-                "oevGateway",
-                "stage"
-            ],
-            "title": "NodeSettings"
+        "nodeSettings": {
+          "$ref": "#/definitions/NodeSettings"
         },
-        "CloudProvider": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "type": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "type"
-            ],
-            "title": "CloudProvider"
+        "ois": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Ois"
+          }
         },
-        "Heartbeat": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                }
-            },
-            "required": [
-                "enabled"
-            ],
-            "title": "Heartbeat"
+        "templates": {
+          "type": "array",
+          "items": {}
         },
-        "Gateway": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "corsOrigins": {
-                    "type": "array",
-                    "items": {}
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "maxConcurrency": {
-                    "type": "integer"
-                }
-            },
-            "required": [
-                "corsOrigins",
-                "enabled",
-                "maxConcurrency"
-            ],
-            "title": "Gateway"
-        },
-        "Ois": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "oisFormat": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
-                },
-                "apiSpecifications": {
-                    "$ref": "#/definitions/APISpecifications"
-                },
-                "endpoints": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Endpoint"
-                    }
-                }
-            },
-            "required": [
-                "apiSpecifications",
-                "endpoints",
-                "oisFormat",
-                "title",
-                "version"
-            ],
-            "title": "Ois"
-        },
-        "APISpecifications": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "components": {
-                    "$ref": "#/definitions/Components"
-                },
-                "paths": {
-                    "$ref": "#/definitions/Paths"
-                },
-                "servers": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Server"
-                    }
-                },
-                "security": {
-                    "$ref": "#/definitions/Security"
-                }
-            },
-            "required": [
-                "components",
-                "paths",
-                "security",
-                "servers"
-            ],
-            "title": "APISpecifications"
-        },
-        "Components": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "securitySchemes": {
-                    "$ref": "#/definitions/SecuritySchemes"
-                }
-            },
-            "required": [
-                "securitySchemes"
-            ],
-            "title": "Components"
-        },
-        "SecuritySchemes": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "testOisSecurityScheme0": {
-                    "$ref": "#/definitions/TestOisSecurityScheme0"
-                }
-            },
-            "required": [
-                "testOisSecurityScheme0"
-            ],
-            "title": "SecuritySchemes"
-        },
-        "TestOisSecurityScheme0": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "in": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "in",
-                "name",
-                "type"
-            ],
-            "title": "TestOisSecurityScheme0"
-        },
-        "Paths": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "/{apiPath}": {
-                    "$ref": "#/definitions/APIPath"
-                }
-            },
-            "required": [
-                "/{apiPath}"
-            ],
-            "title": "Paths"
-        },
-        "APIPath": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "get": {
-                    "$ref": "#/definitions/Get"
-                }
-            },
-            "required": [
-                "get"
-            ],
-            "title": "APIPath"
-        },
-        "Get": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "parameters": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/OperationParameterElement"
-                    }
-                }
-            },
-            "required": [
-                "parameters"
-            ],
-            "title": "Get"
-        },
-        "OperationParameterElement": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "in": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "in",
-                "name"
-            ],
-            "title": "OperationParameterElement"
-        },
-        "Security": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "testOisSecurityScheme0": {
-                    "type": "array",
-                    "items": {}
-                }
-            },
-            "required": [
-                "testOisSecurityScheme0"
-            ],
-            "title": "Security"
-        },
-        "Server": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "url": {
-                    "type": "string",
-                    "format": "uri",
-                    "qt-uri-protocols": [
-                        "https"
-                    ]
-                }
-            },
-            "required": [
-                "url"
-            ],
-            "title": "Server"
-        },
-        "Endpoint": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "fixedOperationParameters": {
-                    "type": "array",
-                    "items": {}
-                },
-                "name": {
-                    "type": "string"
-                },
-                "operation": {
-                    "$ref": "#/definitions/Operation"
-                },
-                "parameters": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/EndpointParameter"
-                    }
-                },
-                "reservedParameters": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ReservedParameter"
-                    }
-                },
-                "preProcessingSpecifications": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ProcessingSpecification"
-                    }
-                },
-                "postProcessingSpecifications": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ProcessingSpecification"
-                    }
-                }
-            },
-            "required": [
-                "fixedOperationParameters",
-                "name",
-                "operation",
-                "parameters",
-                "postProcessingSpecifications",
-                "preProcessingSpecifications",
-                "reservedParameters"
-            ],
-            "title": "Endpoint"
-        },
-        "Operation": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "method": {
-                    "type": "string"
-                },
-                "path": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "method",
-                "path"
-            ],
-            "title": "Operation"
-        },
-        "EndpointParameter": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "required": {
-                    "type": "boolean"
-                },
-                "operationParameter": {
-                    "$ref": "#/definitions/OperationParameterElement"
-                }
-            },
-            "required": [
-                "name",
-                "required"
-            ],
-            "title": "EndpointParameter"
-        },
-        "ProcessingSpecification": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "environment": {
-                    "type": "string"
-                },
-                "value": {
-                    "type": "string"
-                },
-                "timeoutMs": {
-                    "type": "integer"
-                }
-            },
-            "required": [
-                "environment",
-                "timeoutMs",
-                "value"
-            ],
-            "title": "ProcessingSpecification"
-        },
-        "ReservedParameter": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "fixed": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "fixed",
-                "name"
-            ],
-            "title": "ReservedParameter"
-        },
-        "Triggers": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "http": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/HTTP"
-                    }
-                },
-                "httpSignedData": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/HTTP"
-                    }
-                },
-                "rrp": {
-                    "type": "array",
-                    "items": {}
-                }
-            },
-            "required": [
-                "http",
-                "httpSignedData",
-                "rrp"
-            ],
-            "title": "Triggers"
-        },
-        "HTTP": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "endpointId": {
-                    "type": "string"
-                },
-                "endpointName": {
-                    "type": "string"
-                },
-                "oisTitle": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "endpointId",
-                "endpointName",
-                "oisTitle"
-            ],
-            "title": "HTTP"
+        "triggers": {
+          "$ref": "#/definitions/Triggers"
         }
+      },
+      "required": [
+        "apiCredentials",
+        "chains",
+        "nodeSettings",
+        "ois",
+        "templates",
+        "triggers"
+      ],
+      "title": "ConfigJSON"
+    },
+    "APICredential": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "oisTitle": {
+          "type": "string"
+        },
+        "securitySchemeName": {
+          "type": "string"
+        },
+        "securitySchemeValue": {
+          "type": "string"
+        }
+      },
+      "required": ["oisTitle", "securitySchemeName", "securitySchemeValue"],
+      "title": "APICredential"
+    },
+    "NodeSettings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "airnodeWalletMnemonic": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "$ref": "#/definitions/CloudProvider"
+        },
+        "heartbeat": {
+          "$ref": "#/definitions/Heartbeat"
+        },
+        "httpGateway": {
+          "$ref": "#/definitions/Gateway"
+        },
+        "httpSignedDataGateway": {
+          "$ref": "#/definitions/Gateway"
+        },
+        "logFormat": {
+          "type": "string"
+        },
+        "logLevel": {
+          "type": "string"
+        },
+        "nodeVersion": {
+          "type": "string"
+        },
+        "oevGateway": {
+          "$ref": "#/definitions/Gateway"
+        },
+        "stage": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "airnodeWalletMnemonic",
+        "cloudProvider",
+        "heartbeat",
+        "httpGateway",
+        "httpSignedDataGateway",
+        "logFormat",
+        "logLevel",
+        "nodeVersion",
+        "oevGateway",
+        "stage"
+      ],
+      "title": "NodeSettings"
+    },
+    "CloudProvider": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": ["type"],
+      "title": "CloudProvider"
+    },
+    "Heartbeat": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": ["enabled"],
+      "title": "Heartbeat"
+    },
+    "Gateway": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "corsOrigins": {
+          "type": "array",
+          "items": {}
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "maxConcurrency": {
+          "type": "integer"
+        }
+      },
+      "required": ["corsOrigins", "enabled", "maxConcurrency"],
+      "title": "Gateway"
+    },
+    "Ois": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "oisFormat": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "apiSpecifications": {
+          "$ref": "#/definitions/APISpecifications"
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Endpoint"
+          }
+        }
+      },
+      "required": [
+        "apiSpecifications",
+        "endpoints",
+        "oisFormat",
+        "title",
+        "version"
+      ],
+      "title": "Ois"
+    },
+    "APISpecifications": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "components": {
+          "$ref": "#/definitions/Components"
+        },
+        "paths": {
+          "$ref": "#/definitions/Paths"
+        },
+        "servers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Server"
+          }
+        },
+        "security": {
+          "$ref": "#/definitions/Security"
+        }
+      },
+      "required": ["components", "paths", "security", "servers"],
+      "title": "APISpecifications"
+    },
+    "Components": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "securitySchemes": {
+          "$ref": "#/definitions/SecuritySchemes"
+        }
+      },
+      "required": ["securitySchemes"],
+      "title": "Components"
+    },
+    "SecuritySchemes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "testOisSecurityScheme0": {
+          "$ref": "#/definitions/TestOisSecurityScheme0"
+        }
+      },
+      "required": ["testOisSecurityScheme0"],
+      "title": "SecuritySchemes"
+    },
+    "TestOisSecurityScheme0": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "in": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": ["in", "name", "type"],
+      "title": "TestOisSecurityScheme0"
+    },
+    "Paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "/{apiPath}": {
+          "$ref": "#/definitions/APIPath"
+        }
+      },
+      "required": ["/{apiPath}"],
+      "title": "Paths"
+    },
+    "APIPath": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "get": {
+          "$ref": "#/definitions/Get"
+        }
+      },
+      "required": ["get"],
+      "title": "APIPath"
+    },
+    "Get": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OperationParameterElement"
+          }
+        }
+      },
+      "required": ["parameters"],
+      "title": "Get"
+    },
+    "OperationParameterElement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "in": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": ["in", "name"],
+      "title": "OperationParameterElement"
+    },
+    "Security": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "testOisSecurityScheme0": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": ["testOisSecurityScheme0"],
+      "title": "Security"
+    },
+    "Server": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "qt-uri-protocols": ["https"]
+        }
+      },
+      "required": ["url"],
+      "title": "Server"
+    },
+    "Endpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fixedOperationParameters": {
+          "type": "array",
+          "items": {}
+        },
+        "name": {
+          "type": "string"
+        },
+        "operation": {
+          "$ref": "#/definitions/Operation"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EndpointParameter"
+          }
+        },
+        "reservedParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReservedParameter"
+          }
+        },
+        "preProcessingSpecifications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessingSpecification"
+          }
+        },
+        "postProcessingSpecifications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessingSpecification"
+          }
+        }
+      },
+      "required": [
+        "fixedOperationParameters",
+        "name",
+        "operation",
+        "parameters",
+        "postProcessingSpecifications",
+        "preProcessingSpecifications",
+        "reservedParameters"
+      ],
+      "title": "Endpoint"
+    },
+    "Operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        }
+      },
+      "required": ["method", "path"],
+      "title": "Operation"
+    },
+    "EndpointParameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "operationParameter": {
+          "$ref": "#/definitions/OperationParameterElement"
+        }
+      },
+      "required": ["name", "required"],
+      "title": "EndpointParameter"
+    },
+    "ProcessingSpecification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "environment": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "timeoutMs": {
+          "type": "integer"
+        }
+      },
+      "required": ["environment", "timeoutMs", "value"],
+      "title": "ProcessingSpecification"
+    },
+    "ReservedParameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "fixed": {
+          "type": "string"
+        }
+      },
+      "required": ["fixed", "name"],
+      "title": "ReservedParameter"
+    },
+    "Triggers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "http": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HTTP"
+          }
+        },
+        "httpSignedData": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HTTP"
+          }
+        },
+        "rrp": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": ["http", "httpSignedData", "rrp"],
+      "title": "Triggers"
+    },
+    "HTTP": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpointId": {
+          "type": "string"
+        },
+        "endpointName": {
+          "type": "string"
+        },
+        "oisTitle": {
+          "type": "string"
+        }
+      },
+      "required": ["endpointId", "endpointName", "oisTitle"],
+      "title": "HTTP"
     }
+  }
 }
