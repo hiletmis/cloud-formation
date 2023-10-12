@@ -1,13 +1,17 @@
 export const cut = (object, initialMatch, finalMatch, replaceQuotes = true) => {
   try {
     const newObject = object.map((code, index) => {
-      const object = code.value.match(initialMatch);
+      let sanitized = code.value.replaceAll(/(\n)/g, "");
+      sanitized = sanitized.replace(/ +(?= )/g, "");
+
+      const object = sanitized.match(initialMatch);
 
       let filtered = replaceQuotes
         ? object[0].replaceAll(/(\\n)|(\\)|(")/g, "")
         : object[0].replaceAll(/(\\n)/g, "");
       filtered = filtered.replace(/ +(?= )/g, "");
-      return filtered.substring(1, object[0].length - 1);
+
+      return filtered;
     });
 
     if (newObject == null || newObject === undefined) return [];
@@ -34,12 +38,12 @@ export const combine = (endpoint) => {
   const postProcessingSpecifications = cut(
     endpoint.postProcessingSpecifications,
     /{.+}/g,
-    /[A-Z0-9]+\/[A-Z]+:(?:\(+)(.+?)(?:\)+) => (?:\{+)(.+?)(?:\}+)/g
+    /[A-Z0-9]+\/[A-Z]+: (?:\(+)(.+?)(?:\)+) => (?:\{ +)(.+?)(?: \}+)/g
   );
   const preProcessingSpecifications = cut(
     endpoint.preProcessingSpecifications,
-    /{.+"}}}/g,
-    /["A-Z0-9]+\/[A-Z"]+:(?:\{+)(.+?)(?:\}+)/g,
+    /{.+" }, },}/g,
+    /["A-Z0-9]+\/[A-Z"]+: (?:\{+)(.+?)(?:, \}+)/g,
     false
   );
 
@@ -89,7 +93,7 @@ export const compareFeeds = (oldFeeds, newFeeds) => {
       a.feed === b.feed &&
       (a.code !== b.code ||
         a.preProcessingSpecificationsValue !==
-          b.preProcessingSpecificationsValue)
+        b.preProcessingSpecificationsValue)
     );
   };
   const isUnchanged = (a, b) => {
@@ -143,7 +147,10 @@ export const extractFeeds = (oldOis, newOis) => {
 
 export const getPath = (feed, servers) => {
   try {
-    const path = JSON.parse(feed.preProcessingSpecificationsValue);
+    var correctJson = feed.preProcessingSpecificationsValue.replace(/(['"])?([a-z0-9A-Z_]+)(['"])?:/g, '"$2": ');
+    correctJson = correctJson.replaceAll(/}, }/g, '}}');
+    const path = JSON.parse(correctJson);
+
     if (servers.length === 0) return path;
     const server = servers[0];
     const url = server.url;
