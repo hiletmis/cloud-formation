@@ -69,19 +69,35 @@ const onlyInLeft = (left, right, compareFunction) =>
 export const compareFeeds = (oldFeeds, newFeeds) => {
     let newAdded = []
     let newRemoved = []
+    let newUpdated = []
     let newUnchanged = []
 
     const isSameFeed = (a, b) => { return a.feed === b.feed; }
+    const isCodeChanged = (a, b) => { return a.feed === b.feed && (a.code !== b.code || a.preProcessingSpecificationsValue !== b.preProcessingSpecificationsValue); }
+    const isUnchanged = (a, b) => { return a.feed === b.feed && a.code === b.code && a.preProcessingSpecificationsValue === b.preProcessingSpecificationsValue; }
 
     for (let i = 0; i < oldFeeds.length; i++) {
         newAdded.push(onlyInLeft(oldFeeds[i], newFeeds[i], isSameFeed))
         newRemoved.push(onlyInLeft(newFeeds[i], oldFeeds[i], isSameFeed))
-        newUnchanged.push(oldFeeds[i].filter(oldFeed => newFeeds[i].some(newFeed => isSameFeed(oldFeed, newFeed))))
+
+        let tmp = []
+        newFeeds[i].filter(newFeed => {
+            return oldFeeds[i].some(oldFeed => {
+                const result = isCodeChanged(newFeed, oldFeed)
+                if (result) {
+                    tmp.push({ oldFeed: oldFeed, newFeed: newFeed })
+                }
+                return result
+            })
+        })
+        newUpdated.push(tmp)
+        newUnchanged.push(newFeeds[i].filter(newFeed => oldFeeds[i].some(oldFeed => isUnchanged(newFeed, oldFeed))))
     }
 
     return {
         added: newAdded,
         removed: newRemoved,
+        updated: newUpdated,
         unchanged: newUnchanged
     }
 }
@@ -94,6 +110,29 @@ export const extractFeeds = (oldOis, newOis) => {
         compareFeeds: compareFeeds(oldFeeds, newFeeds),
         serverOld: oldOis[0].apiSpecifications.servers,
         serverNew: newOis[0].apiSpecifications.servers
+    }
+}
+
+export const getPath = (feed, servers) => {
+    try {
+        const path = JSON.parse(feed.preProcessingSpecificationsValue)
+        if (servers.length === 0) return path
+        const server = servers[0]
+        const url = server.url
+
+        let queryString = "?"
+        Object.keys(path.parameters).forEach((key) => {
+            const value = path.parameters[key]
+            queryString += `${key}=${value}&`
+        })
+
+        queryString = queryString.substring(0, queryString.length - 1)
+
+        const pathWithBase = url + "/" + path.path + queryString
+        return pathWithBase
+
+    } catch (error) {
+        console.log(error)
     }
 }
 

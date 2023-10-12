@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@api3/commons": "^0.2.0",
     "@chakra-ui/icons": "^2.1.0",
     "@chakra-ui/react": "^2.6.0",
     "@testing-library/jest-dom": "^5.17.0",
@@ -26,6 +27,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "prettier": "prettier --write \"./**/*.{js,ts,md,json,sol}\""
   },
   "eslintConfig": {
@@ -45,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.0.0"
   }
 }

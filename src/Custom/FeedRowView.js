@@ -4,6 +4,7 @@ import { CopyBlock, dracula } from "react-code-blocks";
 import parserTypeScript from "prettier/parser-babel";
 import prettier from "prettier/standalone";
 import { useState } from "react";
+import { getPath } from "../Helpers/Utils";
 
 const FeedRowView = ({ feed, servers }) => {
 
@@ -21,32 +22,8 @@ const FeedRowView = ({ feed, servers }) => {
         }
     }
 
-    const getPath = () => {
-        try {
-
-            const path = JSON.parse(feed.preProcessingSpecificationsValue)
-            if (servers.length === 0) return path
-            const server = servers[0]
-            const url = server.url
-
-            let queryString = "?"
-            Object.keys(path.parameters).forEach((key) => {
-                const value = path.parameters[key]
-                queryString += `${key}=${value}&`
-            })
-
-            queryString = queryString.substring(0, queryString.length - 1)
-
-            const pathWithBase = url + "/" + path.path + queryString
-            return pathWithBase
-
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
     const getPrice = () => {
-        const url = getPath()
+        const url = getPath(feed, servers)
 
         fetch(url)
             .then((response) => response.json())
@@ -63,9 +40,9 @@ const FeedRowView = ({ feed, servers }) => {
             <Text fontSize={"md"} fontWeight={"bold"}>HTTP Request</Text>
             <Flex >
                 <Text bgColor={"blue.300"} p={2} fontSize={"sm"} fontWeight={"bold"}>GET</Text>
-                <Text bgColor={"blue.200"} p={2} fontSize={"sm"}>{getPath()}</Text>
+                <Text bgColor={"blue.200"} p={2} fontSize={"sm"}>{getPath(feed, servers)}</Text>
                 <Spacer />
-                <Button colorScheme={"orange"} p={2} fontSize={"sm"} onClick={() => { getPrice() }} >Try it out</Button>
+                <Button colorScheme={"orange"} p={2} fontSize={"sm"} h={"32px"} onClick={() => { getPrice() }} >Try it out</Button>
             </Flex>
             {
                 response == null ? null :

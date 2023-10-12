@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { VStack } from "@chakra-ui/react";
 import { extractFeeds } from "../Helpers/Utils";
 import FeedGroupView from "../Custom/FeedGroupView";
+import FeedCompareGroupView from "../Custom/FeedCompareGroupView";
 
 const Endpoint = ({ oldOis, newOis }) => {
 
@@ -29,6 +30,11 @@ const Endpoint = ({ oldOis, newOis }) => {
                     {
                         comparison.compareFeeds.removed.map((feed, index) => (
                             <FeedGroupView key={index} index={index} feed={feed} server={comparison.serverNew} title={"Removed"} status={2} />
+                        ))
+                    }
+                    {
+                        comparison.compareFeeds.updated.map((feed, index) => (
+                            <FeedCompareGroupView key={index} index={index} feed={feed} server={comparison.serverNew} title={"Updated"} status={3} />
                         ))
                     }
                     {

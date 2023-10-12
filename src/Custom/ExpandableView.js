@@ -15,6 +15,8 @@ const ExpandableView = ({ view, header, defaultState = false, status = 0 }) => {
                 return "green.300"
             case 2:
                 return "red.300"
+            case 3:
+                return "blue.300"
             default:
                 return "gray.300"
         }
