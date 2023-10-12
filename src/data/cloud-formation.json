@@ -24,17 +24,17 @@
         "ContainerDefinitions": [
           {
             "Name": "my_app",
-            "Image": "metobom1/my_app",
+            "Image": "api3/pusher:0.1.0-rc1",
             "Environment": [
               {
-                "Name": "CONFIG",
+                "Name": "SECRETS_ENV",
                 "Value": ""
               }
             ],
-            "PortMappings": [
-              {
-                "ContainerPort": 8080
-              }
+            "EntryPoint": [
+              "/bin/sh",
+              "-c",
+              "echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - https://raw.githubusercontent.com/metobom/pusher-operations/master/data/apis/cryptocompare/deployments/11-10-2023/cryptocompare-pusher-config.json >> ./config/pusher.json && node --enable-source-maps dist/index.js"
             ],
             "LogConfiguration": {
               "LogDriver": "awslogs",
@@ -115,7 +115,8 @@
                   "logs:CreateLogGroup",
                   "logs:CreateLogStream",
                   "logs:DescribeLogStreams",
-                  "logs:PutLogEvents"
+                  "logs:PutLogEvents",
+                  "s3:Get*"
                 ],
                 "Resource": "*"
               }
@@ -123,34 +124,6 @@
           }
         ]
       }
-    },
-    "WaitConditionHandle": {
-      "Type": "AWS::CloudFormation::WaitConditionHandle",
-      "Properties": {}
-    },
-    "FailDueToWrongRegion": {
-      "Type": "AWS::CloudFormation::WaitCondition",
-      "Condition": "NotInUsEast1",
-      "Properties": {
-        "Handle": {
-          "Ref": "WaitConditionHandle"
-        },
-        "Timeout": "1"
-      }
-    }
-  },
-  "Conditions": {
-    "NotInUsEast1": {
-      "Fn::Not": [
-        {
-          "Fn::Equals": [
-            {
-              "Ref": "AWS::Region"
-            },
-            "us-east-1"
-          ]
-        }
-      ]
     }
   }
 }

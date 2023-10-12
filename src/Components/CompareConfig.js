@@ -69,13 +69,13 @@ const Hero = () => {
               <UploadConfig
                 configFile={configFile}
                 setConfig={setConfig}
-                description={"Upload a config file to compare"}
+                description={"Upload NEW config file"}
               />
               <Spacer width={"10px"} />
               <UploadConfig
                 configFile={configFile2}
                 setConfig={setConfig2}
-                description={"Upload a config file to compare"}
+                description={"Upload an old config file"}
               />
             </Flex>
           ) : (

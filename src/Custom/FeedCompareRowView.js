@@ -12,7 +12,7 @@ const FeedCompareRowView = ({ feed, servers }) => {
   const formatCode = (code) => {
     try {
       return prettier.format(code, {
-        semi: false,
+        semi: true,
         parser: "babel",
         plugins: [parserTypeScript],
       });

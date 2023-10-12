@@ -16,6 +16,10 @@ const ExpandableView = ({ view, header, defaultState = false, status = 0 }) => {
         return "red.300";
       case 3:
         return "blue.300";
+      case 4:
+        return "purple.300";
+      case 5:
+        return COLORS.main;
       default:
         return "gray.300";
     }
@@ -25,8 +29,8 @@ const ExpandableView = ({ view, header, defaultState = false, status = 0 }) => {
     <VStack
       alignItems={"left"}
       p={2}
-      border={"1px"}
       borderColor={COLORS.main}
+      boxShadow={"sm"}
       width={"100%"}
     >
       <Box p={2} alignItems={"center"} borderRadius={"sm"} bgColor={getColor()}>

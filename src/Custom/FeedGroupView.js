@@ -4,7 +4,7 @@ import ExpandableView from "./ExpandableView";
 import FeedRowView from "./FeedRowView";
 
 const FeedGroupView = ({ index, feed, server, title, status }) => {
-  return (
+  return feed.length === 0 ? null : (
     <VStack key={index} alignItems={"left"} width={"100%"}>
       <Text fontWeight={"bold"} fontSize={"lg"}>
         {title}

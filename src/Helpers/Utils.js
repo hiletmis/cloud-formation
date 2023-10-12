@@ -93,7 +93,7 @@ export const compareFeeds = (oldFeeds, newFeeds) => {
       a.feed === b.feed &&
       (a.code !== b.code ||
         a.preProcessingSpecificationsValue !==
-        b.preProcessingSpecificationsValue)
+          b.preProcessingSpecificationsValue)
     );
   };
   const isUnchanged = (a, b) => {
@@ -147,8 +147,11 @@ export const extractFeeds = (oldOis, newOis) => {
 
 export const getPath = (feed, servers) => {
   try {
-    var correctJson = feed.preProcessingSpecificationsValue.replace(/(['"])?([a-z0-9A-Z_]+)(['"])?:/g, '"$2": ');
-    correctJson = correctJson.replaceAll(/}, }/g, '}}');
+    var correctJson = feed.preProcessingSpecificationsValue.replace(
+      /(['"])?([a-z0-9A-Z_]+)(['"])?:/g,
+      '"$2": '
+    );
+    correctJson = correctJson.replaceAll(/}, }/g, "}}");
     const path = JSON.parse(correctJson);
 
     if (servers.length === 0) return path;
@@ -168,4 +171,18 @@ export const getPath = (feed, servers) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const testMnemonic = (mnemonic) => {
+  if (mnemonic.split(" ").length !== 12)
+    return {
+      status: false,
+      message: "Invalid mnemonic: Mnemonic must be 12 words",
+    };
+  if (mnemonic.match(/[^a-zA-Z ]/))
+    return {
+      status: false,
+      message: "Invalid mnemonic: Mnemonic must only contain letters",
+    };
+  return { status: true, message: "Valid mnemonic" };
 };
