@@ -45,7 +45,7 @@ const Hero = () => {
             />
           </Flex>
         </VStack>
-        <Text fontSize={"xs"}>Version: 0.0.1a</Text>
+        <Text fontSize={"xs"}>Version: 0.0.1b</Text>
       </VStack>
     </Flex>
   );
