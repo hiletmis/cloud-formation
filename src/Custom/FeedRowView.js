@@ -5,9 +5,11 @@ import parserTypeScript from "prettier/parser-babel";
 import prettier from "prettier/standalone";
 import { useState } from "react";
 import { getPath } from "../Helpers/Utils";
+import { postProcessing } from "../Helpers/PostProcessing";
 
 const FeedRowView = ({ feed, servers }) => {
   const [response, setResponse] = useState(null);
+  const [postProcess, setPostProcess] = useState(null);
 
   const formatCode = (code) => {
     try {
@@ -28,11 +30,16 @@ const FeedRowView = ({ feed, servers }) => {
       .then((response) => response.json())
       .then((res) => {
         setResponse(JSON.stringify(res, null, 2));
+        process(res);
       })
       .catch((error) => {
         setResponse(error);
       });
   };
+
+  const process = (response) => {
+    postProcessing(response, feed, servers, setPostProcess);
+  }
 
   return (
     <VStack alignItems={"left"} spacing={4} p={2} width={"100%"}>
@@ -84,6 +91,19 @@ const FeedRowView = ({ feed, servers }) => {
         theme={dracula}
         codeBlock={true}
       />
+      {
+        postProcess == null ? null : (
+          <VStack alignItems={"left"} width={"100%"}>
+            <CopyBlock
+              text={formatCode(postProcess)}
+              language={"javascript"}
+              showLineNumbers={true}
+              theme={dracula}
+              codeBlock={true}
+            />
+          </VStack>
+        )
+      }
     </VStack>
   );
 };

@@ -1,15 +1,17 @@
-import { postProcessApiCallResponse } from "@api3/commons/src/processing";
 
-export const postProcess = (
-  apiCallResponse,
-  endpoint,
-  apiCallParameters,
-  processingOptions
-) => {
-  return postProcessApiCallResponse(
+export const postProcessing = (
     apiCallResponse,
-    endpoint,
-    apiCallParameters,
-    processingOptions
-  );
+    feed,
+    servers,
+    setPostProcess
+) => {
+
+    console.log("apiCallResponse", apiCallResponse)
+    console.log("feed", feed)
+    console.log("servers", servers)
+
+    setPostProcess("wowowo haram")
+
+
+
 };
