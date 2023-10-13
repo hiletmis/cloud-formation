@@ -93,7 +93,7 @@ export const compareFeeds = (oldFeeds, newFeeds) => {
       a.feed === b.feed &&
       (a.code !== b.code ||
         a.preProcessingSpecificationsValue !==
-          b.preProcessingSpecificationsValue)
+        b.preProcessingSpecificationsValue)
     );
   };
   const isUnchanged = (a, b) => {
@@ -145,14 +145,28 @@ export const extractFeeds = (oldOis, newOis) => {
   };
 };
 
-export const getPath = (feed, servers) => {
+export const jsonify = (object) => {
   try {
-    var correctJson = feed.preProcessingSpecificationsValue.replace(
+    var correctJson = object.replace(
       /(['"])?([a-z0-9A-Z_]+)(['"])?:/g,
       '"$2": '
     );
     correctJson = correctJson.replaceAll(/}, }/g, "}}");
-    const path = JSON.parse(correctJson);
+    const json = JSON.parse(correctJson);
+    return json;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getApiCallParameters = (preProcessingSpecificationsValue) => {
+  const apiCallParameters = jsonify(preProcessingSpecificationsValue);
+  return apiCallParameters.parameters;
+}
+
+export const getPath = (feed, servers) => {
+  try {
+    const path = jsonify(feed.preProcessingSpecificationsValue);
 
     if (servers.length === 0) return path;
     const server = servers[0];

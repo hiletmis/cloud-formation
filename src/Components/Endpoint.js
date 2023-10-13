@@ -11,7 +11,7 @@ const Endpoint = ({ endpoint, servers }) => {
       {combine(endpoint).map((feed, index) => (
         <VStack key={index} alignItems={"left"} width={"100%"}>
           <ExpandableView
-            view={<FeedRowView feed={feed} servers={servers} />}
+            view={<FeedRowView endpoint={endpoint} feed={feed} servers={servers} />}
             header={feed.feed}
           />
         </VStack>
