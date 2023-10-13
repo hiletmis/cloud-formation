@@ -35,15 +35,20 @@ const FeedCompareRowView = ({ feed, servers }) => {
   };
 
   return (
-    <>
+    <VStack
+      alignItems={"left"}
+      spacing={4}
+      p={5}
+      width={"100%"}
+    >
       <VStack
-        bgColor={"gray.200"}
+        bgColor={"yellow.200"}
         alignItems={"left"}
         spacing={4}
         p={2}
         width={"100%"}
       >
-        <Text bgColor={"gray.400"} p={2} fontSize={"md"} fontWeight={"bold"}>
+        <Text bgColor={"yellow.400"} p={2} fontSize={"md"} fontWeight={"bold"}>
           [DEPRECATED]
         </Text>
         <Text fontSize={"md"}>Get {feed.oldFeed.feed} price</Text>
@@ -131,7 +136,7 @@ const FeedCompareRowView = ({ feed, servers }) => {
           codeBlock={true}
         />
       </VStack>
-    </>
+    </VStack>
   );
 };
 
