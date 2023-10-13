@@ -4,7 +4,8 @@ import Welcome from "./Components/Welcome";
 import CompareConfig from "./Components/CompareConfig";
 import Integrations from "./Components/Integrations";
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
+
 import { ColorModeScript } from "@chakra-ui/react";
 
 import { ChakraProvider, Flex, VStack } from "@chakra-ui/react";
@@ -17,7 +18,7 @@ function App() {
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
 
-      <Router>
+      <HashRouter>
         <Header />
         <Flex
           h="calc(100vh - 60px)"
@@ -38,7 +39,7 @@ function App() {
             </Routes>
           </VStack>
         </Flex>
-      </Router>
+      </HashRouter>
     </ChakraProvider>
   );
 }
