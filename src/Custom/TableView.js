@@ -1,49 +1,45 @@
-import { Text, Flex, Spacer, VStack, Box } from "@chakra-ui/react";
-import { COLORS } from "../data/colors";
-import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+} from "@chakra-ui/react";
 
-const TableView = ({ view, header, defaultState = false }) => {
-  const [isOpen, setIsOpen] = useState(defaultState);
+const TableView = ({ headers, parameters }) => {
+  const getHeaders = () => {
+    const titles = [];
+    headers.forEach((title) => {
+      titles.push(<Th>{title.value}</Th>);
+    });
+    return titles;
+  };
+
+  const getRows = () => {
+    const rows = [];
+    parameters.forEach((parameter) => {
+      rows.push(
+        <Tr>
+          {headers.forEach((title) => {
+            rows.push(<Td>{parameter[title.key]}</Td>);
+          })}
+        </Tr>
+      );
+    });
+    return rows;
+  };
 
   return (
-    <VStack
-      alignItems={"left"}
-      p={2}
-      border={"1px"}
-      borderColor={COLORS.main}
-      width={"100%"}
-    >
-      <Box
-        p={2}
-        alignItems={"center"}
-        borderRadius={"sm"}
-        bgColor={COLORS.info}
-      >
-        <Flex alignItems={"center"}>
-          <Text fontWeight={"bold"} fontSize={"lg"}>
-            {header}
-          </Text>
-          <Spacer />
-          {isOpen ? (
-            <TriangleUpIcon
-              width={"24px"}
-              height={"24px"}
-              cursor={"pointer"}
-              onClick={() => setIsOpen(!isOpen)}
-            />
-          ) : (
-            <TriangleDownIcon
-              width={"24px"}
-              height={"24px"}
-              cursor={"pointer"}
-              onClick={() => setIsOpen(!isOpen)}
-            />
-          )}
-        </Flex>
-      </Box>
-      {isOpen ? view : null}
-    </VStack>
+    <TableContainer>
+      <Table variant="striped" size={"sm"}>
+        <Thead>
+          <Tr>{getHeaders()}</Tr>
+        </Thead>
+        <Tbody>{getRows()}</Tbody>
+      </Table>
+    </TableContainer>
   );
 };
 

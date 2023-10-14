@@ -35,12 +35,7 @@ const FeedCompareRowView = ({ feed, servers }) => {
   };
 
   return (
-    <VStack
-      alignItems={"left"}
-      spacing={4}
-      p={5}
-      width={"100%"}
-    >
+    <VStack alignItems={"left"} spacing={4} p={5} width={"100%"}>
       <VStack
         bgColor={"yellow.200"}
         alignItems={"left"}

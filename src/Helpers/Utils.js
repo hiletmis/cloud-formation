@@ -93,7 +93,7 @@ export const compareFeeds = (oldFeeds, newFeeds) => {
       a.feed === b.feed &&
       (a.code !== b.code ||
         a.preProcessingSpecificationsValue !==
-        b.preProcessingSpecificationsValue)
+          b.preProcessingSpecificationsValue)
     );
   };
   const isUnchanged = (a, b) => {
@@ -157,12 +157,19 @@ export const jsonify = (object) => {
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 export const getApiCallParameters = (preProcessingSpecificationsValue) => {
   const apiCallParameters = jsonify(preProcessingSpecificationsValue);
-  return apiCallParameters.parameters;
-}
+  return apiCallParameters;
+};
+
+export const getServerUrl = (servers) => {
+  if (servers.length === 0) return "";
+  const server = servers[0];
+  const url = server.url;
+  return url;
+};
 
 export const getPath = (feed, servers) => {
   try {
