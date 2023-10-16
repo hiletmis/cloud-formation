@@ -19,6 +19,7 @@ const TableView = ({ headers, parameters }) => {
 
   const getRows = () => {
     const rows = [];
+    if (parameters === undefined || parameters === null) return rows;
     parameters.forEach((parameter) => {
       rows.push(
         <Tr>

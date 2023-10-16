@@ -3,7 +3,7 @@
   "Description": "A CloudFormation template for deploying  my_app.",
   "Resources": {
     "CloudWatchLogsGroup": {
-      "Description": "The service log the outputs of the app.",
+      "Description": "The service to log the outputs of the app.",
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
         "LogGroupName": "myAppLogs",
@@ -24,7 +24,7 @@
         "ContainerDefinitions": [
           {
             "Name": "my_app",
-            "Image": "api3/pusher:0.1.0-rc1",
+            "Image": "api3/pusher:0.1.0-rc2",
             "Environment": [
               {
                 "Name": "SECRETS_ENV",
@@ -76,19 +76,79 @@
           "AwsvpcConfiguration": {
             "AssignPublicIp": "ENABLED",
             "Subnets": [
-              "subnet-0d8dc1c4d8677b97c",
-              "subnet-0440d6c2e00af4944",
-              "subnet-059f430393c7b9b9f",
-              "subnet-04c99243cc1e19262",
-              "subnet-024ce29d1f319c1d6",
-              "subnet-0468245acfa795e39"
-            ],
-            "SecurityGroups": ["sg-0e0d2b972d0836114"]
+              {
+                "Ref": "MySubnet"
+              }
+            ]
           }
         },
         "DeploymentConfiguration": {
           "MinimumHealthyPercent": 100,
           "MaximumPercent": 200
+        }
+      }
+    },
+    "MyVPC": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsSupport": true,
+        "EnableDnsHostnames": true
+      }
+    },
+    "MyInternetGateway": {
+      "Type": "AWS::EC2::InternetGateway"
+    },
+    "MyVPCGatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyVPC"
+        },
+        "InternetGatewayId": {
+          "Ref": "MyInternetGateway"
+        }
+      }
+    },
+    "MyPublicRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyVPC"
+        }
+      }
+    },
+    "MyPublicRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "MyVPCGatewayAttachment",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyPublicRouteTable"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "MyInternetGateway"
+        }
+      }
+    },
+    "MySubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/24",
+        "VpcId": {
+          "Ref": "MyVPC"
+        },
+        "MapPublicIpOnLaunch": true
+      }
+    },
+    "MyPublicSubnet1RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyPublicRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "MySubnet"
         }
       }
     },
@@ -115,8 +175,7 @@
                   "logs:CreateLogGroup",
                   "logs:CreateLogStream",
                   "logs:DescribeLogStreams",
-                  "logs:PutLogEvents",
-                  "s3:Get*"
+                  "logs:PutLogEvents"
                 ],
                 "Resource": "*"
               }

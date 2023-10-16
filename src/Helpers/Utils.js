@@ -1,4 +1,10 @@
-export const cut = (object, initialMatch, finalMatch, replaceQuotes = true) => {
+export const cut = (
+  object,
+  initialMatch,
+  finalMatch,
+  replaceQuotes = true,
+  setError
+) => {
   try {
     const newObject = object.map((code, index) => {
       let sanitized = code.value.replaceAll(/(\n)/g, "");
@@ -26,34 +32,44 @@ export const cut = (object, initialMatch, finalMatch, replaceQuotes = true) => {
 
     return final;
   } catch (error) {
-    console.log(error);
+    setError(error);
   }
 
   return [];
 };
 
-export const combine = (endpoint) => {
+export const combine = (endpoint, setError) => {
   if (endpoint === null || endpoint === undefined || endpoint.length === 0)
     return [];
   const postProcessingSpecifications = cut(
     endpoint.postProcessingSpecifications,
     /{.+}/g,
-    /[A-Z0-9]+\/[A-Z]+: (?:\(+)(.+?)(?:\)+) => (?:\{ +)(.+?)(?: \}+)/g
+    /[A-Z0-9]+\/[A-Z]+: (?:\(+)(.+?)(?:\)+) => (?:\{ +)(.+?)(?: \}+)/g,
+    true,
+    setError
   );
   const preProcessingSpecifications = cut(
     endpoint.preProcessingSpecifications,
     /{.+" }, },}/g,
     /["A-Z0-9]+\/[A-Z"]+: (?:\{+)(.+?)(?:, \}+)/g,
-    false
+    false,
+    setError
   );
 
   const combined = postProcessingSpecifications.map((item, index) => {
+    const specifications = preProcessingSpecifications.filter(
+      (j) => j[0].replaceAll(/(\\n)|(\\)|(")/g, "") === item[0]
+    );
+    const preProcessingSpecificationsValue =
+      specifications.length > 0 ? specifications : [["", ""]];
+
     return {
       feed: item[0],
       code: item[1],
-      preProcessingSpecificationsValue: preProcessingSpecifications[index][1],
+      preProcessingSpecificationsValue: preProcessingSpecificationsValue[0][1],
     };
   });
+
   return combined;
 };
 
@@ -145,7 +161,7 @@ export const extractFeeds = (oldOis, newOis) => {
   };
 };
 
-export const jsonify = (object) => {
+export const jsonify = (object, setError) => {
   try {
     var correctJson = object.replace(
       /(['"])?([a-z0-9A-Z_]+)(['"])?:/g,
@@ -155,12 +171,16 @@ export const jsonify = (object) => {
     const json = JSON.parse(correctJson);
     return json;
   } catch (error) {
-    console.log(error);
+    setError(error);
   }
 };
 
-export const getApiCallParameters = (preProcessingSpecificationsValue) => {
-  const apiCallParameters = jsonify(preProcessingSpecificationsValue);
+export const getApiCallParameters = (
+  preProcessingSpecificationsValue,
+  setError
+) => {
+  const apiCallParameters = jsonify(preProcessingSpecificationsValue, setError);
+  if (apiCallParameters === null) return null;
   return apiCallParameters;
 };
 
@@ -171,15 +191,19 @@ export const getServerUrl = (servers) => {
   return url;
 };
 
-export const getPath = (feed, servers) => {
+export const getPath = (feed, servers, setError) => {
   try {
-    const path = jsonify(feed.preProcessingSpecificationsValue);
-
+    const path = jsonify(feed.preProcessingSpecificationsValue, setError);
+    if (path === undefined) return null;
     if (servers.length === 0) return path;
+
     const server = servers[0];
     const url = server.url;
 
     let queryString = "?";
+
+    if (path.parameters === undefined) return path;
+
     Object.keys(path.parameters).forEach((key) => {
       const value = path.parameters[key];
       queryString += `${key}=${value}&`;
@@ -190,8 +214,28 @@ export const getPath = (feed, servers) => {
     const pathWithBase = url + "/" + path.path + queryString;
     return pathWithBase;
   } catch (error) {
-    console.log(error);
+    setError(error);
   }
+};
+
+export const pathFromPrePreProcessing = (parameters, servers) => {
+  if (parameters === undefined) return parameters;
+  if (servers.length === 0) return parameters;
+
+  const server = servers[0];
+  const url = server.url;
+
+  let queryString = "?";
+  Object.keys(parameters).forEach((key) => {
+    if (key === "path") return;
+    const value = parameters[key];
+    queryString += `${key}=${value}&`;
+  });
+
+  queryString = queryString.substring(0, queryString.length - 1);
+
+  const pathWithBase = url + "/" + parameters.path + queryString;
+  return pathWithBase;
 };
 
 export const testMnemonic = (mnemonic) => {

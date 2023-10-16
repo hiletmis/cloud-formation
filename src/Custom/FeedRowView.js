@@ -3,13 +3,19 @@ import { CopyBlock, dracula } from "react-code-blocks";
 
 import parserTypeScript from "prettier/parser-babel";
 import prettier from "prettier/standalone";
-import { useState } from "react";
-import { getPath, getApiCallParameters } from "../Helpers/Utils";
-import { postProcessing } from "../Helpers/PostProcessing";
+import { useEffect, useState } from "react";
+import {
+  getPath,
+  getApiCallParameters,
+  pathFromPrePreProcessing,
+} from "../Helpers/Utils";
+import { postProcessing, preProcessing } from "../Helpers/PostProcessing";
 import TableView from "./TableView";
 
 const FeedRowView = ({ endpoint, feed, servers }) => {
   const [postProcessResult, setPostProcessResult] = useState(null);
+  const [preProcessResult, setPreProcessResult] = useState(null);
+  const [error, setError] = useState(null);
 
   const formatCode = (code) => {
     try {
@@ -24,57 +30,69 @@ const FeedRowView = ({ endpoint, feed, servers }) => {
   };
 
   const formatParameters = (parameters) => {
-    const apiCallParameters = getApiCallParameters(
-      feed.preProcessingSpecificationsValue
-    );
+    try {
+      const apiCallParameters = getApiCallParameters(
+        feed.preProcessingSpecificationsValue,
+        setError
+      );
 
-    const formattedParameters = [];
-    Object.keys(parameters).forEach((key) => {
-      const parameter = parameters[key];
-      formattedParameters.push({
-        name: parameter.name,
-        type:
-          parameter.operationParameter == null
-            ? "string"
-            : parameter.operationParameter.in,
-        value:
+      if (apiCallParameters === null) return [];
+
+      const formattedParameters = [];
+      Object.keys(parameters).forEach((key) => {
+        const parameter = parameters[key];
+        if (parameter.name === "path") return;
+        const data =
           parameter.name === "path"
             ? apiCallParameters.path
-            : apiCallParameters.parameters[parameter.name],
-        required: parameter.required ? "Yes" : "No",
+            : apiCallParameters.parameters[parameter.name];
+
+        if (data === undefined) {
+          return;
+        }
+
+        formattedParameters.push({
+          name: parameter.name,
+          type:
+            parameter.operationParameter == null
+              ? "string"
+              : parameter.operationParameter.in,
+          value: data,
+          required: parameter.required ? "Yes" : "No",
+        });
       });
-    });
 
-    formattedParameters.sort((a, b) => {
-      console.log(a, b);
-      if (b.value === undefined && a.value !== undefined) return -1;
-      return 0;
-    });
+      formattedParameters.sort((a, b) => {
+        if (b.value === undefined && a.value !== undefined) return -1;
+        return 0;
+      });
 
-    return formattedParameters;
+      return formattedParameters;
+    } catch (error) {
+      setError(error);
+    }
   };
 
-  const getPrice = () => {
-    const url = getPath(feed, servers);
+  const preProcess = () => {
+    preProcessing(endpoint, { name: feed.feed }, setPreProcessResult);
+  };
 
+  useEffect(() => {
+    if (preProcessResult == null) return;
+    if (feed.preProcessingSpecificationsValue == null) return;
+
+    const url = pathFromPrePreProcessing(preProcessResult, servers);
     fetch(url)
       .then((response) => response.json())
       .then((res) => {
-        postProcess(res);
+        postProcessing(
+          res,
+          { name: feed.feed },
+          endpoint,
+          setPostProcessResult
+        );
       });
-  };
-
-  const postProcess = (response) => {
-    const apiCallParameters = getApiCallParameters(
-      feed.preProcessingSpecificationsValue
-    );
-    postProcessing(
-      response,
-      apiCallParameters.parameters,
-      endpoint,
-      setPostProcessResult
-    );
-  };
+  }, [endpoint, feed, preProcessResult, servers]);
 
   const getColor = (method, darker) => {
     if (method === "GET") return darker ? "blue.300" : "blue.200";
@@ -102,22 +120,26 @@ const FeedRowView = ({ endpoint, feed, servers }) => {
           p={2}
           fontSize={"sm"}
         >
-          {getPath(feed, servers)}
+          {error !== null ? "error" : getPath(feed, servers, setError)}
         </Text>
         <Spacer />
       </Flex>
       <Text fontSize={"md"} fontWeight={"bold"}>
         Parameters
       </Text>
-      <TableView
-        parameters={formatParameters(endpoint.parameters)}
-        headers={[
-          { key: "name", value: "Name" },
-          { key: "type", value: "Type" },
-          { key: "value", value: "Value" },
-          { key: "required", value: "Required" },
-        ]}
-      />
+      {error !== null ? (
+        "error"
+      ) : (
+        <TableView
+          parameters={formatParameters(endpoint.parameters)}
+          headers={[
+            { key: "name", value: "Name" },
+            { key: "type", value: "Type" },
+            { key: "value", value: "Value" },
+            { key: "required", value: "Required" },
+          ]}
+        />
+      )}
       <Text fontSize={"md"} fontWeight={"bold"}>
         Post Processing
       </Text>
@@ -136,7 +158,7 @@ const FeedRowView = ({ endpoint, feed, servers }) => {
           h={"50px"}
           w={"100px"}
           onClick={() => {
-            getPrice();
+            preProcess();
           }}
         >
           Try it out
@@ -148,9 +170,23 @@ const FeedRowView = ({ endpoint, feed, servers }) => {
             Result
           </Text>
           <CopyBlock
-            text={postProcessResult}
+            text={formatCode(postProcessResult)}
             language={"json"}
             showLineNumbers={true}
+            theme={dracula}
+            codeBlock={true}
+          />
+        </VStack>
+      )}
+      {error == null ? null : (
+        <VStack alignItems={"left"} width={"100%"}>
+          <Text fontSize={"md"} fontWeight={"bold"}>
+            Error
+          </Text>
+          <CopyBlock
+            text={formatCode(error)}
+            language={"json"}
+            showLineNumbers={false}
             theme={dracula}
             codeBlock={true}
           />
