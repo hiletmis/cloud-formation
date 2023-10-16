@@ -23,6 +23,7 @@ const Endpoint = ({ oldOis, newOis }) => {
       {comparison.compareFeeds.added.map((feed, index) => (
         <FeedGroupView
           key={index}
+          endpoint={comparison.endpointsNew[0]}
           index={index}
           feed={feed}
           server={comparison.serverNew}
@@ -33,6 +34,7 @@ const Endpoint = ({ oldOis, newOis }) => {
       {comparison.compareFeeds.removed.map((feed, index) => (
         <FeedGroupView
           key={index}
+          endpoint={comparison.endpointsOld[0]}
           index={index}
           feed={feed}
           server={comparison.serverNew}
@@ -53,6 +55,7 @@ const Endpoint = ({ oldOis, newOis }) => {
       {comparison.compareFeeds.unchanged.map((feed, index) => (
         <FeedGroupView
           key={index}
+          endpoint={comparison.endpointsNew[0]}
           index={index}
           feed={feed}
           server={comparison.serverNew}

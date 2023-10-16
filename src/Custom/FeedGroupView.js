@@ -3,7 +3,7 @@ import { Text, VStack } from "@chakra-ui/react";
 import ExpandableView from "./ExpandableView";
 import FeedRowView from "./FeedRowView";
 
-const FeedGroupView = ({ index, feed, server, title, status }) => {
+const FeedGroupView = ({ index, endpoint, feed, server, title, status }) => {
   return feed.length === 0 ? null : (
     <VStack key={index} alignItems={"left"} width={"100%"}>
       <Text fontWeight={"bold"} fontSize={"lg"}>
@@ -13,7 +13,7 @@ const FeedGroupView = ({ index, feed, server, title, status }) => {
         <VStack key={index} alignItems={"left"} width={"100%"}>
           <ExpandableView
             status={status}
-            view={<FeedRowView feed={feed} servers={server} />}
+            view={<FeedRowView endpoint={endpoint} feed={feed} servers={server} tryit={false} />}
             header={feed.feed}
           />
         </VStack>

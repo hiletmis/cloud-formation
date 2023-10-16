@@ -12,7 +12,7 @@ import {
 import { postProcessing, preProcessing } from "../Helpers/PostProcessing";
 import TableView from "./TableView";
 
-const FeedRowView = ({ endpoint, feed, servers }) => {
+const FeedRowView = ({ endpoint, feed, servers, tryit = true }) => {
   const [postProcessResult, setPostProcessResult] = useState(null);
   const [preProcessResult, setPreProcessResult] = useState(null);
   const [error, setError] = useState(null);
@@ -150,19 +150,24 @@ const FeedRowView = ({ endpoint, feed, servers }) => {
         theme={dracula}
         codeBlock={true}
       />
+
       <VStack alignItems={"left"} width={"100%"}>
-        <Button
-          colorScheme={"orange"}
-          p={2}
-          fontSize={"sm"}
-          h={"50px"}
-          w={"100px"}
-          onClick={() => {
-            preProcess();
-          }}
-        >
-          Try it out
-        </Button>
+        {
+          !tryit ? null :
+            <Button
+              colorScheme={"orange"}
+              p={2}
+              fontSize={"sm"}
+              h={"50px"}
+              w={"100px"}
+              onClick={() => {
+                preProcess();
+              }}
+            >
+              Try it out
+            </Button>
+        }
+
       </VStack>
       {postProcessResult == null ? null : (
         <VStack alignItems={"left"} width={"100%"}>

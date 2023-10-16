@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   VStack,
   Flex,
-  Button,
   Text,
   Box,
   Input,
@@ -12,9 +11,10 @@ import Endpoint from "./Endpoint";
 import InputRow from "../Custom/InputRow";
 import { COLORS } from "../data/colors";
 import Title from "../Custom/Title";
-import CloudFormation from "../data/cloud-formation";
-import { testMnemonic } from "../Helpers/Utils";
 import ExpandableView from "../Custom/ExpandableView";
+import ImageButton from "../Custom/ImageButton";
+import { populateOis } from "../Helpers/Utils";
+import CloudFormation from "../data/cloud-formation.json";
 
 const Hero = ({ configData }) => {
   const [ois, setOis] = useState([]);
@@ -46,48 +46,6 @@ const Hero = ({ configData }) => {
       return obj;
     });
     setSecuritySchemeValue(newState);
-  };
-
-  const populateOis = () => {
-    const config = configData === null ? null : JSON.parse(configData);
-    if (config == null) return;
-    if (config.ois === null) return;
-    if (config.ois.length === 0) return;
-
-    if (config.airnodeWalletMnemonic === null) return;
-
-    config.airnodeWalletMnemonic = AIRNODE_WALLET_MNEMONIC;
-    config.apiCredentials = SECURITY_SCHEME_VALUES;
-
-    const mnemonicTest = testMnemonic(AIRNODE_WALLET_MNEMONIC);
-    if (mnemonicTest.status === false) {
-      alert(mnemonicTest.message);
-      return;
-    }
-
-    let API_KEY = "";
-    ois.forEach((ois) => {
-      SECURITY_SCHEME_VALUES.forEach((item) => {
-        API_KEY += `\\n${ois.title.toUpperCase()}_API_KEY=${
-          item.securitySchemeValue
-        }`;
-      });
-    });
-
-    const secrets = `WALLET_MNEMONIC=${AIRNODE_WALLET_MNEMONIC}${API_KEY}`;
-
-    CloudFormation.Resources.MyAppDefinition.Properties.ContainerDefinitions[0].Environment[0].Value =
-      secrets;
-
-    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-      JSON.stringify(CloudFormation, null, 2)
-    )}`;
-
-    const link = document.createElement("a");
-    link.href = jsonString;
-    link.download = "CloudFormation.json";
-
-    link.click();
   };
 
   return configData === null ? null : (
@@ -181,17 +139,20 @@ const Hero = ({ configData }) => {
           </VStack>
         </VStack>
       ))}
-      <VStack>
-        <Button
-          width={"250px"}
-          height={"50px"}
-          colorScheme="orange"
-          size="md"
-          onClick={populateOis}
-        >
-          Generate Cloud Formation
-        </Button>
-      </VStack>
+      <Flex justifyContent={"center"} marginBottom={"20px"}>
+        <ImageButton
+          onClick={() => populateOis(configData, AIRNODE_WALLET_MNEMONIC, SECURITY_SCHEME_VALUES, ois, CloudFormation)}
+          bgColor={COLORS.info}
+          description={"Cloud Formation"}
+          icon={"./cloudFormation.svg"}
+        />
+        <ImageButton
+          onClick={() => populateOis(configData, AIRNODE_WALLET_MNEMONIC, SECURITY_SCHEME_VALUES, ois, CloudFormation, true)}
+          bgColor={COLORS.info}
+          description={"Local Run"}
+          icon={"./docker.svg"}
+        />
+      </Flex>
       <VStack height={"400px"}></VStack>
     </VStack>
   );

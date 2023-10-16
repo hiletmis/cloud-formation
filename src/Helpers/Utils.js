@@ -95,7 +95,7 @@ const onlyInLeft = (left, right, compareFunction) =>
       !right.some((rightValue) => compareFunction(leftValue, rightValue))
   );
 
-export const compareFeeds = (oldFeeds, newFeeds) => {
+export const compareFeeds = (newFeeds, oldFeeds) => {
   let newAdded = [];
   let newRemoved = [];
   let newUpdated = [];
@@ -109,7 +109,7 @@ export const compareFeeds = (oldFeeds, newFeeds) => {
       a.feed === b.feed &&
       (a.code !== b.code ||
         a.preProcessingSpecificationsValue !==
-          b.preProcessingSpecificationsValue)
+        b.preProcessingSpecificationsValue)
     );
   };
   const isUnchanged = (a, b) => {
@@ -121,8 +121,8 @@ export const compareFeeds = (oldFeeds, newFeeds) => {
   };
 
   for (let i = 0; i < oldFeeds.length; i++) {
-    newAdded.push(onlyInLeft(oldFeeds[i], newFeeds[i], isSameFeed));
-    newRemoved.push(onlyInLeft(newFeeds[i], oldFeeds[i], isSameFeed));
+    newRemoved.push(onlyInLeft(oldFeeds[i], newFeeds[i], isSameFeed));
+    newAdded.push(onlyInLeft(newFeeds[i], oldFeeds[i], isSameFeed));
 
     let tmp = [];
     newFeeds[i].filter((newFeed) => {
@@ -150,14 +150,19 @@ export const compareFeeds = (oldFeeds, newFeeds) => {
   };
 };
 
-export const extractFeeds = (oldOis, newOis) => {
-  const oldFeeds = getFeeds(getEndpoints(oldOis));
-  const newFeeds = getFeeds(getEndpoints(newOis));
+export const extractFeeds = (newOis, oldOis) => {
+  const endpointsOld = getEndpoints(oldOis);
+  const endpointsNew = getEndpoints(newOis);
+
+  const oldFeeds = getFeeds(endpointsOld);
+  const newFeeds = getFeeds(endpointsNew);
 
   return {
-    compareFeeds: compareFeeds(oldFeeds, newFeeds),
+    compareFeeds: compareFeeds(newFeeds, oldFeeds),
     serverOld: oldOis[0].apiSpecifications.servers,
     serverNew: newOis[0].apiSpecifications.servers,
+    endpointsOld: endpointsOld,
+    endpointsNew: endpointsNew,
   };
 };
 
@@ -251,3 +256,63 @@ export const testMnemonic = (mnemonic) => {
     };
   return { status: true, message: "Valid mnemonic" };
 };
+
+export const populateOis = (configData, AIRNODE_WALLET_MNEMONIC, SECURITY_SCHEME_VALUES, ois, CloudFormation, local = false) => {
+  const config = configData === null ? null : JSON.parse(configData);
+  if (config == null) return;
+  if (config.ois === null) return;
+  if (config.ois.length === 0) return;
+
+  if (config.airnodeWalletMnemonic === null) return;
+
+  config.airnodeWalletMnemonic = AIRNODE_WALLET_MNEMONIC;
+  config.apiCredentials = SECURITY_SCHEME_VALUES;
+
+  const mnemonicTest = testMnemonic(AIRNODE_WALLET_MNEMONIC);
+  if (mnemonicTest.status === false) {
+    alert(mnemonicTest.message);
+    return;
+  }
+
+  let API_KEY = "";
+  ois.forEach((ois) => {
+    SECURITY_SCHEME_VALUES.forEach((item) => {
+      API_KEY += `\n${ois.title.toUpperCase()}_API_KEY=${item.securitySchemeValue}`;
+    });
+  });
+
+  const secrets = `WALLET_MNEMONIC=${AIRNODE_WALLET_MNEMONIC}${API_KEY}`;
+
+  if (!local) {
+    downloadCloudFormation(CloudFormation, secrets);
+    return;
+  } else {
+    downloadSecrets(secrets);
+  }
+};
+
+const downloadSecrets = (secrets) => {
+
+  const jsonString = `data:text/plain;base64,${btoa(secrets)}`;
+
+  const link = document.createElement("a");
+  link.href = jsonString;
+  link.download = "secrets.env";
+  link.click();
+}
+
+
+const downloadCloudFormation = (CloudFormation, secrets) => {
+  CloudFormation.Resources.MyAppDefinition.Properties.ContainerDefinitions[0].Environment[0].Value =
+    secrets;
+
+  const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+    JSON.stringify(CloudFormation, null, 2)
+  )}`;
+
+  const link = document.createElement("a");
+  link.href = jsonString;
+  link.download = "CloudFormation.json";
+  link.click();
+
+}
