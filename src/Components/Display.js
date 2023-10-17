@@ -13,7 +13,7 @@ import { COLORS } from "../data/colors";
 import Title from "../Custom/Title";
 import ExpandableView from "../Custom/ExpandableView";
 import ImageButton from "../Custom/ImageButton";
-import { populateOis } from "../Helpers/Utils";
+import { populateOis } from "../Helpers/DownloadConfig";
 import CloudFormation from "../data/cloud-formation.json";
 
 const Hero = ({ configData }) => {
@@ -147,10 +147,16 @@ const Hero = ({ configData }) => {
           icon={"./cloudFormation.svg"}
         />
         <ImageButton
-          onClick={() => populateOis(configData, AIRNODE_WALLET_MNEMONIC, SECURITY_SCHEME_VALUES, ois, CloudFormation, true)}
+          onClick={() => populateOis(configData, AIRNODE_WALLET_MNEMONIC, SECURITY_SCHEME_VALUES, ois, CloudFormation, "docker")}
           bgColor={COLORS.info}
           description={"Local Run"}
           icon={"./docker.svg"}
+        />
+        <ImageButton
+          onClick={() => populateOis(configData, AIRNODE_WALLET_MNEMONIC, SECURITY_SCHEME_VALUES, ois, CloudFormation, "env")}
+          bgColor={COLORS.info}
+          description={"Secrets File"}
+          icon={"./env.svg"}
         />
       </Flex>
       <VStack height={"400px"}></VStack>
