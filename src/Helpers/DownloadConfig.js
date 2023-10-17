@@ -14,7 +14,7 @@ export const testMnemonic = (mnemonic) => {
 
 
 
-export const populateOis = (configData, AIRNODE_WALLET_MNEMONIC, SECURITY_SCHEME_VALUES, ois, CloudFormation, mode = "cloud") => {
+export const populateOis = (configData, AIRNODE_WALLET_MNEMONIC, SECURITY_SCHEME_VALUES, ois, CloudFormation, mode = "cloud", callback) => {
     const config = configData === null ? null : JSON.parse(configData);
     if (config == null) return;
     if (config.ois === null) return;
@@ -27,7 +27,7 @@ export const populateOis = (configData, AIRNODE_WALLET_MNEMONIC, SECURITY_SCHEME
 
     const mnemonicTest = testMnemonic(AIRNODE_WALLET_MNEMONIC);
     if (mnemonicTest.status === false) {
-        alert(mnemonicTest.message);
+        callback({ status: false, message: mnemonicTest.message, mode: mode });
         return;
     }
 
@@ -53,6 +53,8 @@ export const populateOis = (configData, AIRNODE_WALLET_MNEMONIC, SECURITY_SCHEME
         default:
             break;
     }
+
+    callback({ status: true, message: "File downloaded successfully", mode: mode });
 };
 
 const downloadDocker = (SECRETS, CONFIG = "https://raw.githubusercontent.com/metobom/pusher-operations/master/data/apis/cryptocompare/deployments/11-10-2023/cryptocompare-pusher-config.json") => {

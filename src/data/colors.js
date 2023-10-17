@@ -9,5 +9,6 @@ export const COLORS = {
   main: "#f4f4e7",
   button: "#FFF4CC",
   buttonDisabled: "gray.800",
-  caution: "yellow.700",
+  error: "red.300",
+  success: "green.300",
 };
