@@ -5,7 +5,7 @@ import {
   Text,
   Box,
   Input,
-  Spacer, Image, Button
+  Spacer, Image
 } from "@chakra-ui/react";
 import Endpoint from "./Endpoint";
 import InputRow from "../Custom/InputRow";
